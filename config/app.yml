@@ -1,0 +1,2 @@
+mysql:
+  dns: root:learn2usemysql@tcp(localhost:3306)/cloud_drive?charset=utf8&parseTime=True&loc=Local

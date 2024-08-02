@@ -2,10 +2,14 @@ package main
 
 import (
 	"CloudDrive/router"
+	"CloudDrive/util"
 	"log"
 )
 
 func main() {
+	util.InitConfig()
+	util.InitMySQL()
+
 	r := router.Router()
 
 	r.LoadHTMLGlob("view/*")        //配置页面路径
