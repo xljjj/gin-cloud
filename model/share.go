@@ -1,6 +1,7 @@
 package model
 
 import (
+	"CloudDrive/mysql"
 	"CloudDrive/util"
 	"strings"
 	"time"
@@ -23,19 +24,19 @@ func CreateShare(code string, username string, fId int) string {
 		Username: username,
 		Hash:     util.Md5Encode(code + string(time.Now().Unix())),
 	}
-	util.DB.Create(&share)
+	mysql.DB.Create(&share)
 	return share.Hash
 }
 
 // GetShare 根据Hash查询分享
 func GetShare(f string) (share Share) {
-	util.DB.Find(&share, "hash = ?", f)
+	mysql.DB.Find(&share, "hash = ?", f)
 	return
 }
 
 // VerifyShare 校验分享
 func VerifyShare(fId, code string) bool {
 	var share Share
-	util.DB.Find(&share, "file_id = ? and code = ?", fId, code)
+	mysql.DB.Find(&share, "file_id = ? and code = ?", fId, code)
 	return share.Id != 0
 }

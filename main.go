@@ -1,6 +1,8 @@
 package main
 
 import (
+	"CloudDrive/mysql"
+	"CloudDrive/redis"
 	"CloudDrive/router"
 	"CloudDrive/util"
 	"log"
@@ -8,7 +10,8 @@ import (
 
 func main() {
 	util.InitConfig()
-	util.InitMySQL()
+	mysql.InitMySQL()
+	redis.InitRedis()
 
 	r := router.Router()
 

@@ -1,6 +1,7 @@
 package model
 
 import (
+	"CloudDrive/mysql"
 	"CloudDrive/util"
 	"path"
 	"strconv"
@@ -52,28 +53,28 @@ func createFile(fileFullName string, fileHash string, fileSize int64, fId int, f
 		Postfix:        strings.ToLower(fileSuffix),
 	}
 
-	util.DB.Create(&myFile)
+	mysql.DB.Create(&myFile)
 }
 
 // GetUserFiles 获取用户所有文件
 func GetUserFiles(parentId int, storeId int) (files []MyFile) {
-	util.DB.Find(&files, "file_store_id = ? and parent_folder_id = ?", storeId, parentId)
+	mysql.DB.Find(&files, "file_store_id = ? and parent_folder_id = ?", storeId, parentId)
 	return files
 }
 
 // ReduceStoreSize 上传文件后减去可用容量
 func ReduceStoreSize(size int64, storeId int) {
 	var fileStore FileStore
-	util.DB.First(&fileStore, storeId)
+	mysql.DB.First(&fileStore, storeId)
 	fileStore.CurrentSize = fileStore.CurrentSize + size/1024
 	fileStore.MaxSize = fileStore.MaxSize - size/1024
-	util.DB.Save(&fileStore)
+	mysql.DB.Save(&fileStore)
 }
 
 // GetUserFileNum 得到用户文件数量
 func GetUserFileNum(storeId int) (num int64) {
 	var files []MyFile
-	util.DB.Find(&files, "file_store_id = ?", storeId).Count(&num)
+	mysql.DB.Find(&files, "file_store_id = ?", storeId).Count(&num)
 	return num
 }
 
@@ -91,19 +92,19 @@ func GetFileDetailUse(fileStoreId int) map[string]int64 {
 	fileDetailUseMap := make(map[string]int64, 0)
 
 	//文档类型
-	docCount = util.DB.Find(&files, "file_store_id = ? and type = ?", fileStoreId, 1).RowsAffected
+	docCount = mysql.DB.Find(&files, "file_store_id = ? and type = ?", fileStoreId, 1).RowsAffected
 	fileDetailUseMap["docCount"] = docCount
 	////图片类型
-	imgCount = util.DB.Find(&files, "file_store_id = ? and type = ?", fileStoreId, 2).RowsAffected
+	imgCount = mysql.DB.Find(&files, "file_store_id = ? and type = ?", fileStoreId, 2).RowsAffected
 	fileDetailUseMap["imgCount"] = imgCount
 	//视频类型
-	videoCount = util.DB.Find(&files, "file_store_id = ? and type = ?", fileStoreId, 3).RowsAffected
+	videoCount = mysql.DB.Find(&files, "file_store_id = ? and type = ?", fileStoreId, 3).RowsAffected
 	fileDetailUseMap["videoCount"] = videoCount
 	//音乐类型
-	musicCount = util.DB.Find(&files, "file_store_id = ? and type = ?", fileStoreId, 4).RowsAffected
+	musicCount = mysql.DB.Find(&files, "file_store_id = ? and type = ?", fileStoreId, 4).RowsAffected
 	fileDetailUseMap["musicCount"] = musicCount
 	//其他类型
-	otherCount = util.DB.Find(&files, "file_store_id = ? and type = ?", fileStoreId, 5).RowsAffected
+	otherCount = mysql.DB.Find(&files, "file_store_id = ? and type = ?", fileStoreId, 5).RowsAffected
 	fileDetailUseMap["otherCount"] = otherCount
 
 	return fileDetailUseMap
@@ -111,7 +112,7 @@ func GetFileDetailUse(fileStoreId int) map[string]int64 {
 
 // GetFilesByType 根据文件类型获取文件
 func GetFilesByType(fileType int, fileStoreId int) (files []MyFile) {
-	util.DB.Find(&files, "file_store_id = ? and type = ?", fileStoreId, fileType)
+	mysql.DB.Find(&files, "file_store_id = ? and type = ?", fileStoreId, fileType)
 	return files
 }
 
@@ -123,7 +124,7 @@ func FileExist(fId int, fileFullName string) bool {
 	//获取文件名
 	filePrefix := fileFullName[0 : len(fileFullName)-len(fileSuffix)]
 
-	util.DB.Find(&file, "parent_folder_id = ? and file_name = ? and postfix = ?", fId, filePrefix, fileSuffix)
+	mysql.DB.Find(&file, "parent_folder_id = ? and file_name = ? and postfix = ?", fId, filePrefix, fileSuffix)
 
 	return file.Size != 0
 }
@@ -131,25 +132,25 @@ func FileExist(fId int, fileFullName string) bool {
 // FileOssExist 通过hash判断文件是否已上传过oss
 func FileOssExist(fileHash string) bool {
 	var file MyFile
-	util.DB.Find(&file, "file_hash = ?", fileHash)
+	mysql.DB.Find(&file, "file_hash = ?", fileHash)
 	return file.FileHash != ""
 }
 
 // GetFileById 通过fileId获取文件信息
 func GetFileById(fId string) (file MyFile) {
-	util.DB.First(&file, fId)
+	mysql.DB.First(&file, fId)
 	return file
 }
 
 // DownloadNumAdd 文件下载次数+1
 func DownloadNumAdd(fId int) {
 	var file MyFile
-	util.DB.First(&file, fId)
+	mysql.DB.First(&file, fId)
 	file.DownloadNum = file.DownloadNum + 1
-	util.DB.Save(&file)
+	mysql.DB.Save(&file)
 }
 
 // DeleteUserFile 删除数据库中的文件
 func DeleteUserFile(fId int, folderId int, storeId int) {
-	util.DB.Where("id = ? and file_store_id = ? and parent_folder_id = ?", fId, storeId, folderId).Delete(MyFile{})
+	mysql.DB.Where("id = ? and file_store_id = ? and parent_folder_id = ?", fId, storeId, folderId).Delete(MyFile{})
 }
