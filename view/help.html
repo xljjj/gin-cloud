@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用帮助 | Go语言网盘</title>
+    <style>
+        /* 全局样式 */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        h1, h3 {
+            color: #007bff;
+        }
+        p {
+            margin: 10px 0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+        .advantage, .use, .contact {
+            background: #fff;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .advantage {
+            text-align: center;
+        }
+        .advantage h1 {
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        .advantage p {
+            font-size: 1.2em;
+            color: #555;
+        }
+        .use {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #555;
+        }
+        .contact {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 1.2em;
+        }
+        .contact h3 {
+            flex: 1;
+        }
+        .contact img {
+            width: 30px;
+            height: 30px;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .contact div {
+            flex: 2;
+        }
+        @media (max-width: 768px) {
+            .contact {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .contact div {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- 优点介绍 -->
+    <div class="advantage">
+        <h1>基于Go语言的高效网盘</h1>
+        <p>安全、快速、稳定的文件存储和共享解决方案</p>
+        <p>采用Go语言强大的并发处理，文件上传和下载速度更快。</p>
+    </div>
+
+    <!-- 使用说明 -->
+    <div class="use">
+        <a href="/register">快速注册账号即可使用</a>
+    </div>
+
+    <!-- 联系方式 -->
+    <div class="contact">
+        <h3>联系我们</h3>
+        <div>
+            <img src="/static/img/weibo.png" alt="微博">微博：GO_CloudDrive
+            <br>
+            <img src="/static/img/wechat.png" alt="微信">微信公众号：GO_Learn
+        </div>
+    </div>
+</div>
+</body>
+</html>

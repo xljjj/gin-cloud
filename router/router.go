@@ -18,6 +18,7 @@ func Router() *gin.Engine {
 	cloud.Use(middleware.CheckLogin)
 	{
 		cloud.GET("/index", controller.Index)
+		cloud.GET("/help", controller.Help)
 	}
 	return router
 }
