@@ -16,7 +16,10 @@ import (
 
 // Welcome 欢迎页
 func Welcome(c *gin.Context) {
-	c.HTML(http.StatusOK, "welcome.html", nil)
+	// 测试GO-template
+	c.HTML(http.StatusOK, "welcome.html", gin.H{
+		"title": "欢迎使用 GO 网盘",
+	})
 }
 
 // PrivateInfo 私密信息
