@@ -137,3 +137,18 @@ func LoginSucceed(userInfo, openId string, c *gin.Context) {
 		c.Redirect(http.StatusMovedPermanently, "/cloud/index")
 	}
 }
+
+// Logout 退出登录
+func Logout(c *gin.Context) {
+	token, err := c.Cookie("Token")
+	if err != nil {
+		fmt.Println("cookie", err.Error())
+	}
+
+	if err := redis.DeleteKey(c, token); err != nil {
+		fmt.Println("Del Redis Err:", err.Error())
+	}
+
+	c.SetCookie("Token", "", 0, "/", "pyxgo.cn", false, false)
+	c.Redirect(http.StatusFound, "/")
+}

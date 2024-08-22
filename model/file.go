@@ -25,8 +25,8 @@ type MyFile struct {
 	Postfix        string //文件后缀
 }
 
-// createFile 创建文件
-func createFile(fileFullName string, fileHash string, fileSize int64, fId int, fileStoreId int) {
+// CreateFile 创建文件
+func CreateFile(fileFullName string, fileHash string, fileSize int64, fId int, fileStoreId int) {
 	//后缀
 	fileSuffix := path.Ext(fileFullName)
 	//文件名

@@ -10,3 +10,10 @@ qq:
   appID:
   redirectURL: "http://www.pyxgo.cn/callbackQQ"
   appKey:
+oss:
+  accessKeyID: ""
+  accessKeySecret: ""
+  endPoint: ""
+  BucketName: ""
+upload:
+  location: "/upload"

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户文件</title>
+    <link rel="shortcut icon" href="/static/img/cloud.png"/>
+</head>
+<body>
+<div id="app">
+    <div class="main-wrapper">
+        <div class="navbar-bg"></div>
+        {{template "menu-top" .}}
+        {{template "menu-sidebar" .}}
+        <div class="main-content" style="min-height: 627px;">
+            <section class="section">
+                <h1 class="section-header">
+                    <div><i class="ion ion-folder"></i> 全部文件 <span style="color: red;font-size: 14px"></span></div>
+                </h1>
+                <div class="row">
+                    <div class="col-12 col-sm-12 col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <nav aria-label="breadcrumb" class="empty-space">
+                                    <ol class="breadcrumb">
+                                        <li class="breadcrumb-item">
+                                            <a href="/cloud/file?fId={{.fId}}&fName={{.fName}}" title="刷新">
+                                                <i class="icon ion-refresh"></i>
+                                            </a>
+                                        </li>
+                                        <li class="breadcrumb-item active">
+                                            {{if eq .fId 0}}
+                                            <span>根目录 &nbsp /</span>
+                                            {{else}}
+                                            <a style="font-weight: bold" href="/cloud/files">根目录</a>
+                                            {{end}}
+                                        </li>
+
+                                        {{range .currentAllParent}}
+                                        <li class="breadcrumb-item">
+                                            <a style="font-weight: bold"
+                                               href="/cloud/file?fId={{.Id}}&fName={{.FileFolderName}}">
+                                                {{.FileFolderName}}
+                                            </a>
+                                        </li>
+                                        {{end}}
+
+                                        {{if ne .fId 0}}
+                                        <li class="breadcrumb-item action" aria-current="page">
+                                            {{.fName}}
+                                        </li>
+                                        {{end}}
+
+                                        {{if ne .fId 0}}
+                                        <li class="breadcrumb-item">
+                                            <a href="/cloud/file?fId={{.parentFolder.ParentFolderId}}"
+                                               title="返回上一层">
+                                                <i class="icon ion-arrow-return-left"></i>
+                                            </a>
+                                        </li>
+                                        {{end}}
+                                    </ol>
+                                </nav>
+                                <div class="row" style="margin-top: -10px;">
+                                    <div class="col-12 col-sm-12 col-lg-12 table-responsive">
+                                        <table class="table tab-bordered text-nowrap" id="files-table">
+                                            <tr id="files-table-title" class="empty-space">
+                                                <th></th>
+                                                <th>名称</th>
+                                                <th>类型</th>
+                                                <th>扩展名</th>
+                                                <th>大小</th>
+                                                <th>下载次数</th>
+                                                <th>上传时间</th>
+                                            </tr>
+
+                                            {{range .fileFolder}}
+                                            <tr class="files-items folders">
+                                                <td>
+                                                    <span style="display: none">{{.Id}}</span>
+                                                    <i style="font-size: 24px;color: orange"
+                                                       class="icon ion-android-folder"></i>
+                                                </td>
+                                                <td>
+                                                    <a href="/cloud/file?fId={{.Id}}&fName={{.FileFolderName}}"
+                                                       style="font-weight: 700;color: black">
+                                                        {{.FileFolderName}}
+                                                    </a>
+                                                </td>
+                                                <td style="font-weight: 300">文件夹</td>
+                                                <td style="font-weight: 300">-</td>
+                                                <td style="font-weight: 300">-</td>
+                                                <td style="font-weight: 300">-</td>
+                                                <td style="font-weight: 300">
+                                                    {{.Time}}
+                                                </td>
+                                            </tr>
+                                            {{end}}
+                                            {{range .files}}
+                                            <tr class="files-items files">
+                                                <td><span style="display: none">{{.Id}}</span>
+                                                    {{if eq .Type 1}}
+                                                    <i style="font-size: 24px;color: #3498db"
+                                                       class="icon ion-document-text"></i>
+                                                    {{end}}
+
+                                                    {{if eq .Type 2}}
+                                                    <i style="font-size: 24px;color: #28a745"
+                                                       class="icon ion-image"></i>
+                                                    {{end}}
+
+                                                    {{if eq .Type 3}}
+                                                    <i style="font-size: 24px;color: #FFC107"
+                                                       class="icon ion-ios-videocam"></i>
+                                                    {{end}}
+
+                                                    {{if eq .Type 4}}
+                                                    <i style="font-size: 24px;color: #dc3545"
+                                                       class="icon ion-ios-musical-notes"></i>
+                                                    {{end}}
+
+                                                    {{if eq .Type 5}}
+                                                    <i style="font-size: 24px;color: #343A40"
+                                                       class="icon ion-document"></i>
+                                                    {{end}}
+                                                </td>
+                                                <td>
+                                                    <a href="/cloud/downloadFile?fId={{.Id}}"
+                                                       style="font-weight: 700;color: black">{{.FileName}}</a>
+                                                </td>
+                                                {{if eq .Type 1}}
+                                                <td style="font-weight: 300">文档</td>
+                                                {{end}}
+
+                                                {{if eq .Type 2}}
+                                                <td style="font-weight: 300">图像</td>
+                                                {{end}}
+
+                                                {{if eq .Type 3}}
+                                                <td style="font-weight: 300">视频</td>
+                                                {{end}}
+
+                                                {{if eq .Type 4}}
+                                                <td style="font-weight: 300">音乐</td>
+                                                {{end}}
+
+                                                {{if eq .Type 5}}
+                                                <td style="font-weight: 300">其他</td>
+                                                {{end}}
+
+                                                <td style="font-weight: 300">{{.Postfix}}</td>
+
+
+                                                <td style="font-weight: 300">{{.SizeStr }}</td>
+
+
+                                                <td style="font-weight: 300">{{.DownloadNum}}次</td>
+                                                <td style="font-weight: 300">{{.UploadTime}}</td>
+                                            </tr>
+                                            {{end}}
+                                        </table>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="float-right">
+                                            <a href="javaScript:addFolderElement()"
+                                               class="btn btn-sm btn-outline-success"><i class="icon ion-plus"></i>
+                                                创建文件夹</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <span id="nowF" style="display: none">{{.fId}}</span>
+                <span id="preF" style="display: none">{{.parentFolder.ParentFolderId}}</span>
+                <span id="tarFolder" style="display: none"></span>
+                <span id="tarFile" style="display: none"></span>
+            </section>
+        </div>
+        {{template "menu-footer"}}
+    </div>
+</div>
+</body>
+</html>
+</html>

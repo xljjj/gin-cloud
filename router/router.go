@@ -19,6 +19,23 @@ func Router() *gin.Engine {
 	{
 		cloud.GET("/index", controller.Index)
 		cloud.GET("/help", controller.Help)
+		cloud.GET("/file", controller.File)
+		cloud.GET("/upload", controller.Upload)
+		cloud.GET("/logout", controller.Logout)
+		cloud.GET("/downloadFile", controller.DownloadFile)
+		cloud.GET("/deleteFile", controller.DeleteFile)
+		cloud.GET("/deleteFolder", controller.DeleteFileFolder)
+		cloud.GET("/doc-file", controller.DocFile)
+		cloud.GET("/image-file", controller.ImageFile)
+		cloud.GET("/video-file", controller.VideoFile)
+		cloud.GET("/music-file", controller.MusicFile)
+		cloud.GET("/other-file", controller.OtherFile)
+	}
+	{
+		cloud.POST("/addFolder", controller.AddFolder)
+		cloud.POST("/updateFolder", controller.UpdateFileFolder)
+		cloud.POST("/uploadFile", controller.HandleUpload)
+		cloud.POST("/getQRCode", controller.ShareFile)
 	}
 	return router
 }

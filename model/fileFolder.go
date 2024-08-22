@@ -16,8 +16,8 @@ type FileFolder struct {
 	Time           string
 }
 
-// createFileFolder 新建文件夹
-func createFileFolder(folderName string, parentId string, fileStoreId int) {
+// CreateFileFolder 新建文件夹
+func CreateFileFolder(folderName string, parentId string, fileStoreId int) {
 	parentIntId, err := strconv.Atoi(parentId)
 	if err != nil {
 		fmt.Println("父文件夹ID非法")
