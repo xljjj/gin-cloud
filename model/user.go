@@ -15,6 +15,10 @@ type User struct {
 	ImagePath    string
 }
 
+func (User) TableName() string {
+	return "user"
+}
+
 // CreateUser 创建用户和文件仓库
 func CreateUser(openId string, userName string, imagePath string) {
 	user := User{

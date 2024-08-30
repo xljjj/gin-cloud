@@ -25,6 +25,10 @@ type MyFile struct {
 	Postfix        string //文件后缀
 }
 
+func (MyFile) TableName() string {
+	return "my_file"
+}
+
 // CreateFile 创建文件
 func CreateFile(fileFullName string, fileHash string, fileSize int64, fId int, fileStoreId int) {
 	//后缀

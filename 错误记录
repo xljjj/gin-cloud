@@ -1,0 +1,4 @@
+P 找不到表`simple_users`
+S 需指定表名 func (SimpleUser) TableName() string {return "simple_user"}
+P 上传图片文件接收为空
+S 表单添加enctype="multipart/form-data"才能被正确解析

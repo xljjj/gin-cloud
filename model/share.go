@@ -16,6 +16,10 @@ type Share struct {
 	Hash     string
 }
 
+func (Share) TableName() string {
+	return "share"
+}
+
 // CreateShare 创建分享
 func CreateShare(code string, username string, fId int) string {
 	share := Share{

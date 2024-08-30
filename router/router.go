@@ -13,6 +13,9 @@ func Router() *gin.Engine {
 	router.GET("/welcome", controller.Welcome)
 	router.GET("/login", controller.Login)
 	router.GET("/qq_login", controller.HandleLogin)
+	router.GET("/register", controller.Register)
+
+	router.POST("register", controller.HandleRegister)
 
 	cloud := router.Group("cloud")
 	cloud.Use(middleware.CheckLogin)

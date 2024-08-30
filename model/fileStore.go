@@ -12,6 +12,10 @@ type FileStore struct {
 	MaxSize     int64
 }
 
+func (FileStore) TableName() string {
+	return "file_store"
+}
+
 // GetFileStoreByUserId 根据用户ID得到文件仓库
 func GetFileStoreByUserId(userId int) (fileStore FileStore) {
 	mysql.DB.Find(&fileStore, "user_id = ?", userId)

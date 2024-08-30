@@ -16,6 +16,10 @@ type FileFolder struct {
 	Time           string
 }
 
+func (FileFolder) TableName() string {
+	return "file_folder"
+}
+
 // CreateFileFolder 新建文件夹
 func CreateFileFolder(folderName string, parentId string, fileStoreId int) {
 	parentIntId, err := strconv.Atoi(parentId)
