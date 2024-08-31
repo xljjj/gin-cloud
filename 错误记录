@@ -1,4 +1,15 @@
 P 找不到表`simple_users`
-S 需指定表名 func (SimpleUser) TableName() string {return "simple_user"}
+S 需指定表名
+func (SimpleUser) TableName() string {return "simple_user"}
+
 P 上传图片文件接收为空
 S 表单添加enctype="multipart/form-data"才能被正确解析
+
+P go-template前端页面需要拼接路径
+S router里定义函数
+r.SetFuncMap(template.FuncMap{
+		"concat": func(parts ...string) string { return strings.Join(parts, "") },
+	})
+
+P 前端图片路径正确但是无法展示
+S router需配置静态资源目录 r.Static("/avatar", "./avatar")

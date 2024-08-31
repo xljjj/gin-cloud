@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>管理员</title>
+    <link rel="icon" href="/static/img/admin.png" type="image/png">
+    <link rel="stylesheet" href="/static/css/admin.css">
+</head>
+<body>
+<div class="container">
+    <h1>管理员页面</h1>
+    {{if .hint}}
+    <p class="hint">{{.hint}}</p>
+    {{end}}
+
+    <!-- 查询用户 -->
+    <div class="search-section">
+        <form method="POST" action="/query">
+            <input type="text" name="username" placeholder="输入用户名查询" required>
+            <button type="submit">查询</button>
+        </form>
+    </div>
+
+    {{if .user}}
+    <div class="result-section">
+        <table id="user-info">
+            <thead>
+            <tr>
+                <th>用户名</th>
+                <th>昵称</th>
+                <th>头像</th>
+                <th>上次登录时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{.user.UserName}}</td>
+                <td>{{.user.NickName}}</td>
+                <td><img src='{{concat "/avatar/" .user.UserName .user.Ext}}' alt="头像"
+                         onerror='this.src="/static/img/default.jpg";this.onerror=null;' ></td>
+                <td>{{.user.LastLoginTime}}</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    {{end}}
+
+    <!-- 删除用户 -->
+    <div class="delete-section">
+        <form method="POST" action="/delete">
+            <input type="text" name="username" placeholder="输入用户名删除" required>
+            <button type="submit" class="delete-btn">删除</button>
+        </form>
+    </div>
+</div>
+<script src="/static/js/admin.js"></script>
+</body>
+</html>

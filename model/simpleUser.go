@@ -3,15 +3,17 @@ package model
 import (
 	"CloudDrive/mysql"
 	"gorm.io/gorm"
+	"time"
 )
 
 // SimpleUser 自建用户
 type SimpleUser struct {
-	Id       int
-	UserName string
-	Password string
-	NickName string
-	Ext      string
+	Id            int
+	UserName      string
+	Password      string
+	NickName      string
+	Ext           string
+	LastLoginTime time.Time
 }
 
 func (SimpleUser) TableName() string {

@@ -12,7 +12,7 @@ import (
 // Register 注册用户
 func Register(c *gin.Context) {
 	c.HTML(http.StatusOK, "register.html", gin.H{
-		"ErrorMessage": "",
+		"hint": "",
 	})
 }
 
