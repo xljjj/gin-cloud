@@ -15,10 +15,12 @@ func Router() *gin.Engine {
 	router.GET("/qq_login", controller.HandleLogin)
 	router.GET("/register", controller.Register)
 	router.GET("/admin", controller.Admin)
+	router.GET("/modify", controller.Modify)
 
-	router.POST("register", controller.HandleRegister)
-	router.POST("query", controller.QuerySimpleUser)
-	router.POST("delete", controller.DeleteSimpleUser)
+	router.POST("/register", controller.HandleRegister)
+	router.POST("/query", controller.QuerySimpleUser)
+	router.POST("/delete", controller.DeleteSimpleUser)
+	router.POST("/modify", controller.HandleModify)
 
 	cloud := router.Group("cloud")
 	cloud.Use(middleware.CheckLogin)
