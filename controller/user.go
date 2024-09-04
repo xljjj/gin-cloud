@@ -36,11 +36,6 @@ type QQUserInfo struct {
 	FigureUrl string `json:"figure_url"`
 }
 
-// Login 登录
-func Login(c *gin.Context) {
-	c.HTML(http.StatusOK, "login.html", nil)
-}
-
 // HandleLogin 处理登录
 func HandleLogin(c *gin.Context) {
 	state := "xxxxxxx"

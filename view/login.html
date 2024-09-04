@@ -12,32 +12,31 @@
     {{if .hint}}
     <p class="hint">{{.hint}}</p>
     {{end}}
-    <form action="">
+    <form action="/simple-login" method="post">
         <!-- 输入账号密码部分 -->
         <div class="input-group">
             <label for="username">账号</label>
-            <input type="text" id="username" name="username" placeholder="请输入账号">
+            <input type="text" id="username" name="username" placeholder="请输入账号" required>
         </div>
         <div class="input-group">
             <label for="password">密码</label>
-            <input type="password" id="password" name="password" placeholder="请输入密码">
+            <input type="password" id="password" name="password" placeholder="请输入密码" required>
         </div>
         <button type="submit" class="btn-login">登录</button>
         <div class="register-link">
             <p>没有账号？ <a href="/register">点击注册</a></p>
         </div>
-
-        <!-- QQ 登录部分 -->
-        <div class='login'>
-            <a href="/qq_login" title="QQ登录">
-                <img src="/static/img/qq.png" alt="QQ登录">
-                <p>点击使用QQ一键登录</p>
-            </a>
-        </div>
-        <div class='disclaimer'>
-            <p>欢迎使用本网盘系统</p>
-        </div>
     </form>
+    <!-- QQ 登录部分 -->
+    <div class='login'>
+        <a href="/qq-login" title="QQ登录">
+            <img src="/static/img/qq.png" alt="QQ登录">
+            <p>点击使用QQ一键登录</p>
+        </a>
+    </div>
+    <div class='disclaimer'>
+        <p>欢迎使用本网盘系统</p>
+    </div>
 </div>
 </body>
 </html>

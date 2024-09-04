@@ -12,7 +12,7 @@ func Router() *gin.Engine {
 	router.GET("", controller.Welcome)
 	router.GET("/welcome", controller.Welcome)
 	router.GET("/login", controller.Login)
-	router.GET("/qq_login", controller.HandleLogin)
+	router.GET("/qq-login", controller.HandleLogin)
 	router.GET("/register", controller.Register)
 	router.GET("/admin", controller.Admin)
 	router.GET("/modify", controller.Modify)
@@ -20,6 +20,7 @@ func Router() *gin.Engine {
 	router.POST("/register", controller.HandleRegister)
 	router.POST("/query", controller.QuerySimpleUser)
 	router.POST("/delete", controller.DeleteSimpleUser)
+	router.POST("/simple-login", controller.HandleSimpleLogin)
 	router.POST("/modify", controller.HandleModify)
 
 	cloud := router.Group("cloud")
