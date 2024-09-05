@@ -56,3 +56,29 @@ func CheckSimpleLogin(c *gin.Context) {
 	c.Set("userName", claims.UserName)
 	c.Next()
 }
+
+func CheckAdmin(c *gin.Context) {
+	tokenString, err := c.Cookie("token")
+	if err != nil {
+		c.HTML(http.StatusUnauthorized, "login.html", gin.H{"hint": "请先登录！"})
+		c.Abort()
+		return
+	}
+
+	claims, err := util.ParseToken(tokenString)
+	if err != nil {
+		c.HTML(http.StatusUnauthorized, "login.html", gin.H{"hint": "请重新登录！"})
+		c.Abort()
+		return
+	}
+
+	if claims.UserName != "admin" {
+		c.HTML(http.StatusUnauthorized, "login.html", gin.H{"hint": "请使用管理员账号登录！"})
+		c.Abort()
+		return
+	}
+
+	// 将用户名存储在上下文中
+	c.Set("userName", claims.UserName)
+	c.Next()
+}

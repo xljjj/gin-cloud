@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-// Admin 管理员页面  TODO 管理员权限认证
+// Admin 管理员页面
 func Admin(c *gin.Context) {
 	c.HTML(http.StatusOK, "admin.html", gin.H{
 		"hint": "欢迎登录管理员页面",

@@ -14,11 +14,8 @@ func Router() *gin.Engine {
 	router.GET("/login", controller.Login)
 	router.GET("/qq-login", controller.HandleLogin)
 	router.GET("/register", controller.Register)
-	router.GET("/admin", controller.Admin)
 
 	router.POST("/register", controller.HandleRegister)
-	router.POST("/query", controller.QuerySimpleUser)
-	router.POST("/delete", controller.DeleteSimpleUser)
 	router.POST("/simple-login", controller.HandleSimpleLogin)
 
 	cloud := router.Group("cloud")
@@ -46,5 +43,16 @@ func Router() *gin.Engine {
 		cloud.POST("/getQRCode", controller.ShareFile)
 		cloud.POST("/modify", controller.HandleModify)
 	}
+
+	admin := router.Group("admin")
+	admin.Use(middleware.CheckAdmin)
+	{
+		admin.GET("/index", controller.Admin)
+	}
+	{
+		admin.POST("/query", controller.QuerySimpleUser)
+		admin.POST("/delete", controller.DeleteSimpleUser)
+	}
+
 	return router
 }

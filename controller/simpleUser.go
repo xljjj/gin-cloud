@@ -221,7 +221,7 @@ func HandleSimpleLogin(c *gin.Context) {
 }
 
 func SimpleLogout(c *gin.Context) {
-	// 清除Cookie通过设置过期时间为过去的时间
+	// 通过设置过期时间为过去的时间清除Cookie
 	c.SetCookie("token", "", -1, "/", "localhost", false, true)
 	c.HTML(http.StatusOK, "login.html", gin.H{
 		"hint": "成功登出！",
