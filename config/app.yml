@@ -15,5 +15,6 @@ oss:
   accessKeySecret: ""
   endPoint: ""
   BucketName: ""
-upload:
-  location: "/upload"
+app:
+  JWTKey: "xljjj"
+  upload: "/upload"

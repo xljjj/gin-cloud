@@ -77,7 +77,7 @@ func HandleUpload(c *gin.Context) {
 	defer file.Close()
 
 	//文件保存本地的路径
-	location := viper.GetString("update.location") + head.Filename
+	location := viper.GetString("app.upload") + head.Filename
 
 	//在本地创建一个新的文件
 	newFile, err := os.Create(location)

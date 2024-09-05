@@ -74,3 +74,8 @@ button:hover {
     text-align: center;
     color: red;
 }
+
+.userName{
+    text-align: center;
+    font-family: Tahoma, Arial, “宋体”, serif;
+}

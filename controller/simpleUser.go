@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"time"
 )
 
 // Register 注册用户
@@ -88,16 +89,19 @@ func HandleRegister(c *gin.Context) {
 	})
 }
 
-// Modify 修改用户信息  TODO 用户身份验证
+// Modify 修改用户信息
 func Modify(c *gin.Context) {
+	userName, _ := c.Get("userName")
 	c.HTML(http.StatusOK, "modify.html", gin.H{
-		"hint": "",
+		"hint":     "",
+		"userName": userName,
 	})
 }
 
 // HandleModify 处理修改请求
 func HandleModify(c *gin.Context) {
-	userName := c.PostForm("username")
+	userNameOri, _ := c.Get("userName")
+	userName, _ := userNameOri.(string)
 	currentPassword := c.PostForm("currentPassword")
 	newPassword := c.PostForm("newPassword")
 	confirmPassword := c.PostForm("confirmPassword")
@@ -161,8 +165,9 @@ func HandleModify(c *gin.Context) {
 	}
 	model.UpdateSimpleUser(&s)
 	c.HTML(http.StatusOK, "modify.html", gin.H{
-		"status": "success",
-		"hint":   "修改个人信息成功",
+		"status":   "success",
+		"hint":     "修改个人信息成功",
+		"userName": userName,
 	})
 }
 
@@ -191,7 +196,34 @@ func HandleSimpleLogin(c *gin.Context) {
 		})
 		return
 	}
+	// 生成token并写入cookie中
+	token, err := util.GenerateToken(userName)
+	if err != nil {
+		c.HTML(http.StatusInternalServerError, "login.html", gin.H{
+			"hint": "无法生成token！",
+		})
+		return
+	}
+	c.SetCookie(
+		"token",     // Cookie 名称
+		token,       // Cookie 值
+		3600*24,     // Cookie 的有效时间（秒）
+		"/",         // Cookie 作用路径
+		"localhost", // Cookie 作用域
+		false,       // 是否开启 HTTPS
+		true,        // 是否允许 JS 访问
+	)
+	// 获取当前登录时间并存储
+	s.LastLoginTime = time.Now()
+	model.UpdateSimpleUser(&s)
+	//登录成功重定向到首页
+	c.Redirect(http.StatusMovedPermanently, "/cloud/index")
+}
+
+func SimpleLogout(c *gin.Context) {
+	// 清除Cookie通过设置过期时间为过去的时间
+	c.SetCookie("token", "", -1, "/", "localhost", false, true)
 	c.HTML(http.StatusOK, "login.html", gin.H{
-		"hint": "登录成功！",
+		"hint": "成功登出！",
 	})
 }
