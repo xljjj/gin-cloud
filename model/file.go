@@ -4,7 +4,6 @@ import (
 	"CloudDrive/mysql"
 	"CloudDrive/util"
 	"path"
-	"strconv"
 	"strings"
 	"time"
 )
@@ -19,10 +18,9 @@ type MyFile struct {
 	DownloadNum    int    //下载次数
 	UploadTime     string //上传时间
 	ParentFolderId int    //父文件夹id
-	Size           int64  //文件大小
-	SizeStr        string //文件大小单位
+	Size           int64  //文件大小（默认单位KB）
 	Type           int    //文件类型
-	Postfix        string //文件后缀
+	Suffix         string //文件后缀
 }
 
 func (MyFile) TableName() string {
@@ -36,13 +34,6 @@ func CreateFile(fileFullName string, fileHash string, fileSize int64, fId int, f
 	//文件名
 	fileName := fileFullName[0 : len(fileFullName)-len(fileSuffix)]
 
-	var sizeStr string
-	if fileSize < 1048576 {
-		sizeStr = strconv.FormatInt(fileSize/1024, 10) + "KB"
-	} else {
-		sizeStr = strconv.FormatInt(fileSize/102400, 10) + "MB"
-	}
-
 	myFile := MyFile{
 		FileName:       fileName,
 		FileHash:       fileHash,
@@ -52,30 +43,20 @@ func CreateFile(fileFullName string, fileHash string, fileSize int64, fId int, f
 		UploadTime:     time.Now().Format("2006-01-02 15:04:05"),
 		ParentFolderId: fId,
 		Size:           fileSize / 1024,
-		SizeStr:        sizeStr,
 		Type:           util.GetFileTypeInt(fileSuffix),
-		Postfix:        strings.ToLower(fileSuffix),
+		Suffix:         strings.ToLower(fileSuffix),
 	}
 
 	mysql.DB.Create(&myFile)
 }
 
-// GetUserFiles 获取用户所有文件
-func GetUserFiles(parentId int, storeId int) (files []MyFile) {
+// GetFolderFiles 获取文件夹下所有文件
+func GetFolderFiles(parentId int, storeId int) (files []MyFile) {
 	mysql.DB.Find(&files, "file_store_id = ? and parent_folder_id = ?", storeId, parentId)
 	return files
 }
 
-// ReduceStoreSize 上传文件后减去可用容量
-func ReduceStoreSize(size int64, storeId int) {
-	var fileStore FileStore
-	mysql.DB.First(&fileStore, storeId)
-	fileStore.CurrentSize = fileStore.CurrentSize + size/1024
-	fileStore.MaxSize = fileStore.MaxSize - size/1024
-	mysql.DB.Save(&fileStore)
-}
-
-// GetUserFileNum 得到用户文件数量
+// GetUserFileNum 得到用户文件总数量
 func GetUserFileNum(storeId int) (num int64) {
 	var files []MyFile
 	mysql.DB.Find(&files, "file_store_id = ?", storeId).Count(&num)
@@ -126,22 +107,22 @@ func FileExist(fId int, fileFullName string) bool {
 	//获取文件后缀
 	fileSuffix := strings.ToLower(path.Ext(fileFullName))
 	//获取文件名
-	filePrefix := fileFullName[0 : len(fileFullName)-len(fileSuffix)]
+	fileName := fileFullName[0 : len(fileFullName)-len(fileSuffix)]
 
-	mysql.DB.Find(&file, "parent_folder_id = ? and file_name = ? and postfix = ?", fId, filePrefix, fileSuffix)
+	mysql.DB.Find(&file, "parent_folder_id = ? and file_name = ? and suffix = ?", fId, fileName, fileSuffix)
 
-	return file.Size != 0
+	return file.FileName != ""
 }
 
 // FileOssExist 通过hash判断文件是否已上传过oss
 func FileOssExist(fileHash string) bool {
 	var file MyFile
 	mysql.DB.Find(&file, "file_hash = ?", fileHash)
-	return file.FileHash != ""
+	return file.FileName != ""
 }
 
 // GetFileById 通过fileId获取文件信息
-func GetFileById(fId string) (file MyFile) {
+func GetFileById(fId int) (file MyFile) {
 	mysql.DB.First(&file, fId)
 	return file
 }

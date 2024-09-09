@@ -38,22 +38,23 @@ func SharePass(c *gin.Context) {
 	//获取分享信息
 	shareInfo := model.GetShare(f)
 	//获取文件信息
-	file := model.GetFileById(strconv.Itoa(shareInfo.FileId))
+	file := model.GetFileById(shareInfo.FileId)
 
 	c.HTML(http.StatusOK, "share.html", gin.H{
 		"id":       shareInfo.FileId,
-		"username": shareInfo.Username,
+		"username": shareInfo.UserName,
 		"fileType": file.Type,
-		"filename": file.FileName + file.Postfix,
+		"filename": file.FileName + file.Suffix,
 		"hash":     shareInfo.Hash,
 	})
 }
 
 // DownloadShareFile 下载分享文件
 func DownloadShareFile(c *gin.Context) {
-	fileId := c.Query("id")
+	fileIdStr := c.Query("id")
 	code := c.Query("code")
 	hash := c.Query("hash")
+	fileId, _ := strconv.Atoi(fileIdStr)
 
 	fileInfo := model.GetFileById(fileId)
 
@@ -64,11 +65,10 @@ func DownloadShareFile(c *gin.Context) {
 	}
 
 	//从oss获取文件
-	fileData := util.DownloadOss(fileInfo.FileHash, fileInfo.Postfix)
+	fileData := util.DownloadOss(fileInfo.FileHash, fileInfo.Suffix)
 	//下载次数+1
-	fileIdInt, _ := strconv.Atoi(fileId)
-	model.DownloadNumAdd(fileIdInt)
+	model.DownloadNumAdd(fileId)
 
-	c.Header("Content-disposition", "attachment;filename=\""+fileInfo.FileName+fileInfo.Postfix+"\"")
+	c.Header("Content-disposition", "attachment;filename=\""+fileInfo.FileName+fileInfo.Suffix+"\"")
 	c.Data(http.StatusOK, "application/octect-stream", fileData)
 }

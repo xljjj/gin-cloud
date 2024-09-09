@@ -5,7 +5,7 @@
 前端模板引擎：Thymeleaf -> Go-template（自带）<br>
 <font color=Red>**声明：本项目仅用作学习用途！<br>
 Disclaim: This project is only for learning purposes!**</font>
-# 知识提要
+# 知识汇总
 【GIN】<br>
 Gin是一个轻量级的Go语言Web框架，它具有高性能和简洁的设计。由于其快速的路由匹配和处理性能，Gin成为Go语言中最受欢迎的Web框架之一。以下是一些Gin框架的主要特点：<br>
 快速和轻量级、路由和中间件、JSON解析、支持插件<br>

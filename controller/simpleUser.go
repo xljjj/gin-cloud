@@ -2,6 +2,7 @@ package controller
 
 import (
 	"CloudDrive/model"
+	"CloudDrive/mysql"
 	"CloudDrive/util"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -29,8 +30,8 @@ func HandleRegister(c *gin.Context) {
 	var hint string
 
 	// 验证用户名是否为 8-30 位
-	if len(userName) < 8 || len(userName) > 30 {
-		hint = "用户名必须为 8 到 30 位！"
+	if len(userName) < 5 || len(userName) > 30 {
+		hint = "用户名必须为 5 到 30 位！"
 	}
 
 	// 验证密码和确认密码是否匹配
@@ -82,6 +83,15 @@ func HandleRegister(c *gin.Context) {
 		user.Ext = filepath.Ext(avatar.Filename)
 	}
 	model.CreateSimpleUser(&user)
+	// 创建文件仓库
+	fileStore := model.FileStore{
+		UserId:      user.Id,
+		CurrentSize: 0,
+		MaxSize:     1048576,
+	}
+	mysql.DB.Create(&fileStore)
+	user.FileStoreId = fileStore.Id
+	mysql.DB.Save(&user)
 
 	c.HTML(http.StatusOK, "login.html", gin.H{
 		"status": "success",

@@ -2,8 +2,6 @@ package model
 
 import (
 	"CloudDrive/mysql"
-	"fmt"
-	"strconv"
 	"time"
 )
 
@@ -21,15 +19,10 @@ func (FileFolder) TableName() string {
 }
 
 // CreateFileFolder 新建文件夹
-func CreateFileFolder(folderName string, parentId string, fileStoreId int) {
-	parentIntId, err := strconv.Atoi(parentId)
-	if err != nil {
-		fmt.Println("父文件夹ID非法")
-		return
-	}
+func CreateFileFolder(folderName string, parentId int, fileStoreId int) {
 	fileFolder := FileFolder{
 		FileFolderName: folderName,
-		ParentFolderId: parentIntId,
+		ParentFolderId: parentId,
 		FileStoreId:    fileStoreId,
 		Time:           time.Now().Format("2006-01-02 15:04:05"),
 	}
@@ -48,8 +41,8 @@ func GetChildrenFolders(parentId int, storeId int) (fileFolders []FileFolder) {
 	return fileFolders
 }
 
-// GetPathParents 获取当前路径所有父文件夹
-func GetPathParents(folder FileFolder) (fileFolders []FileFolder) {
+// GetFolderParents 获取当前文件夹的所有父文件夹
+func GetFolderParents(folder FileFolder) (fileFolders []FileFolder) {
 	var cur = folder
 	var par FileFolder
 	for cur.ParentFolderId != 0 {
@@ -57,9 +50,10 @@ func GetPathParents(folder FileFolder) (fileFolders []FileFolder) {
 		fileFolders = append(fileFolders, par)
 		cur = par
 	}
-	//反转
-	for i, j := 0, len(fileFolders)-1; i < j; i, j = i+1, j-1 {
-		fileFolders[i], fileFolders[j] = fileFolders[j], fileFolders[i]
+	// 反转切片
+	n := len(fileFolders)
+	for i := 0; i < n/2; i++ {
+		fileFolders[i], fileFolders[n-i-1] = fileFolders[n-i-1], fileFolders[i]
 	}
 	return fileFolders
 }
@@ -73,19 +67,14 @@ func GetUserFolderNum(fileStoreId int) (num int64) {
 
 // DeleteFileFolder 删除文件夹（及子文件夹）
 func DeleteFileFolder(fId int) {
-	var fileFolder FileFolder
-	var fileFolder2 FileFolder
+	var fileFolders []FileFolder
 	//删除文件夹信息
 	mysql.DB.Where("id = ?", fId).Delete(FileFolder{})
 	//删除文件夹中文件信息
 	mysql.DB.Where("parent_folder_id = ?", fId).Delete(MyFile{})
-	//删除文件夹中文件夹信息
-	mysql.DB.Find(&fileFolder, "parent_folder_id = ?", fId)
-	mysql.DB.Where("parent_folder_id = ?", fId).Delete(FileFolder{})
-
-	mysql.DB.Find(&fileFolder2, "parent_folder_id = ?", fileFolder.Id)
-	//递归删除文件下的文件夹
-	if fileFolder2.Id != 0 {
+	//递归删除文件夹子文件夹信息
+	mysql.DB.Find(&fileFolders, "parent_folder_id = ?", fId)
+	for _, fileFolder := range fileFolders {
 		DeleteFileFolder(fileFolder.Id)
 	}
 }

@@ -12,7 +12,7 @@ type Share struct {
 	Id       int
 	Code     string
 	FileId   int
-	Username string
+	UserName string
 	Hash     string
 }
 
@@ -25,7 +25,7 @@ func CreateShare(code string, username string, fId int) string {
 	share := Share{
 		Code:     strings.ToLower(code),
 		FileId:   fId,
-		Username: username,
+		UserName: username,
 		Hash:     util.Md5Encode(code + string(time.Now().Unix())),
 	}
 	mysql.DB.Create(&share)
@@ -39,7 +39,7 @@ func GetShare(f string) (share Share) {
 }
 
 // VerifyShare 校验分享
-func VerifyShare(fId, code string) bool {
+func VerifyShare(fId int, code string) bool {
 	var share Share
 	mysql.DB.Find(&share, "file_id = ? and code = ?", fId, code)
 	return share.Id != 0

@@ -26,7 +26,7 @@ func Upload(c *gin.Context) {
 	//获取父级的文件夹信息
 	parentFolder := model.GetFolderById(fIdInt)
 	//获取当前目录所有父级
-	currentAllParent := model.GetPathParents(parentFolder)
+	currentAllParent := model.GetFolderParents(parentFolder)
 	//获取用户文件使用明细数量
 	fileDetailUse := model.GetFileDetailUse(user.FileStoreId)
 
@@ -106,7 +106,7 @@ func HandleUpload(c *gin.Context) {
 	//新建文件信息
 	model.CreateFile(head.Filename, fileHash, fileSize, FIdInt, user.FileStoreId)
 	//上传成功减去相应剩余容量
-	model.ReduceStoreSize(fileSize/1024, user.FileStoreId)
+	model.AddStoreSize(fileSize/1024, user.FileStoreId)
 
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,

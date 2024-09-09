@@ -52,8 +52,10 @@ func CheckSimpleLogin(c *gin.Context) {
 		return
 	}
 
-	// 将用户名存储在上下文中
-	c.Set("userName", claims.UserName)
+	// 将用户名及用户ID存储在上下文中
+	user := model.FindSimpleUserByUserName(claims.UserName)
+	c.Set("userName", user.UserName)
+	c.Set("userId", user.Id)
 	c.Next()
 }
 
@@ -78,7 +80,9 @@ func CheckAdmin(c *gin.Context) {
 		return
 	}
 
-	// 将用户名存储在上下文中
-	c.Set("userName", claims.UserName)
+	// 将用户名及用户ID存储在上下文中
+	user := model.FindSimpleUserByUserName(claims.UserName)
+	c.Set("userName", user.UserName)
+	c.Set("userId", user.Id)
 	c.Next()
 }

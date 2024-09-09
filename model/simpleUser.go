@@ -14,6 +14,7 @@ type SimpleUser struct {
 	NickName      string
 	Ext           string
 	LastLoginTime time.Time
+	FileStoreId   int
 }
 
 func (SimpleUser) TableName() string {

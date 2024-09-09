@@ -18,7 +18,7 @@ func File(c *gin.Context) {
 
 	//获取当前目录所有文件
 	fIdInt, _ := strconv.Atoi(fId)
-	files := model.GetUserFiles(fIdInt, user.FileStoreId)
+	files := model.GetFolderFiles(fIdInt, user.FileStoreId)
 
 	//获取当前目录所有文件夹
 	fileFolder := model.GetChildrenFolders(fIdInt, user.FileStoreId)
@@ -27,7 +27,7 @@ func File(c *gin.Context) {
 	parentFolder := model.GetFolderById(fIdInt)
 
 	//获取当前目录所有父级
-	currentAllParent := model.GetPathParents(parentFolder)
+	currentAllParent := model.GetFolderParents(parentFolder)
 
 	//获取当前目录信息
 	currentFolder := model.GetFolderById(fIdInt)
@@ -54,21 +54,22 @@ func AddFolder(c *gin.Context) {
 	user := model.GetUser(fmt.Sprintf("%v", openId))
 
 	folderName := c.PostForm("fileFolderName")
-	parentId := c.DefaultPostForm("parentFolderId", "0")
+	parentIdStr := c.DefaultPostForm("parentFolderId", "0")
+	parentId, _ := strconv.Atoi(parentIdStr)
 
 	//新建文件夹数据
 	model.CreateFileFolder(folderName, parentId, user.FileStoreId)
 
 	//获取父文件夹信息
-	parentIdInt, _ := strconv.Atoi(parentId)
-	parent := model.GetFolderById(parentIdInt)
+	parent := model.GetFolderById(parentId)
 
-	c.Redirect(http.StatusMovedPermanently, "/cloud/file?fId="+parentId+"&fName="+parent.FileFolderName)
+	c.Redirect(http.StatusMovedPermanently, "/cloud/file?fId="+parentIdStr+"&fName="+parent.FileFolderName)
 }
 
 // DownloadFile 下载文件
 func DownloadFile(c *gin.Context) {
-	fId := c.Query("fId")
+	fIdStr := c.Query("fId")
+	fId, _ := strconv.Atoi(fIdStr)
 
 	file := model.GetFileById(fId)
 	if file.FileHash == "" {
@@ -76,12 +77,11 @@ func DownloadFile(c *gin.Context) {
 	}
 
 	//从oss获取文件
-	fileData := util.DownloadOss(file.FileHash, file.Postfix)
+	fileData := util.DownloadOss(file.FileHash, file.Suffix)
 	//下载次数+1
-	fIdInt, _ := strconv.Atoi(fId)
-	model.DownloadNumAdd(fIdInt)
+	model.DownloadNumAdd(fId)
 
-	c.Header("Content-disposition", "attachment;filename=\""+file.FileName+file.Postfix+"\"")
+	c.Header("Content-disposition", "attachment;filename=\""+file.FileName+file.Suffix+"\"")
 	c.Data(http.StatusOK, "application/octect-stream", fileData)
 }
 
