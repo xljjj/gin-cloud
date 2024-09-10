@@ -79,6 +79,11 @@ func DeleteFileFolder(fId int) {
 	}
 }
 
+// DeleteStoreAllFolder 删除文件仓库中所有文件夹
+func DeleteStoreAllFolder(fileStoreId int) {
+	mysql.DB.Where("file_store_id = ?", fileStoreId).Delete(FileFolder{})
+}
+
 // UpdateFolderName 修改文件夹名
 func UpdateFolderName(fId int, fName string) {
 	var fileFolder FileFolder

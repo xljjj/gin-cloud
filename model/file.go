@@ -135,7 +135,12 @@ func DownloadNumAdd(fId int) {
 	mysql.DB.Save(&file)
 }
 
-// DeleteUserFile 删除数据库中的文件
+// DeleteUserFile 删除文件夹中的文件
 func DeleteUserFile(fId int, folderId int, storeId int) {
 	mysql.DB.Where("id = ? and file_store_id = ? and parent_folder_id = ?", fId, storeId, folderId).Delete(MyFile{})
+}
+
+// DeleteStoreAllFile 删除一个仓库的所有文件
+func DeleteStoreAllFile(storeId int) {
+	mysql.DB.Where("file_store_id = ?", storeId).Delete(MyFile{})
 }

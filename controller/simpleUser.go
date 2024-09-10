@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"strconv"
 	"time"
 )
 
@@ -92,6 +93,8 @@ func HandleRegister(c *gin.Context) {
 	mysql.DB.Create(&fileStore)
 	user.FileStoreId = fileStore.Id
 	mysql.DB.Save(&user)
+	// 创建一个属于用户的文件夹（代指文件仓库）
+	_ = os.Mkdir(strconv.Itoa(fileStore.Id), os.ModePerm)
 
 	c.HTML(http.StatusOK, "login.html", gin.H{
 		"status": "success",
