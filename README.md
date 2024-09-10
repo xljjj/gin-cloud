@@ -2,7 +2,7 @@
 # GIN based cloud storage network disk
 参考链接(Reference)<br>
 <https://github.com/xiaogao67/gin-cloud-storage><br>
-前端模板引擎：Thymeleaf -> Go-template（自带）<br>
+前端模板引擎：Thymeleaf -> GO html/template（自带）<br>
 <font color=Red>**声明：本项目仅用作学习用途！<br>
 Disclaim: This project is only for learning purposes!**</font>
 # 知识汇总

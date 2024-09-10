@@ -87,9 +87,6 @@ func DownloadFile(c *gin.Context) {
 
 // DeleteFile 删除文件
 func DeleteFile(c *gin.Context) {
-	openId, _ := c.Get("openId")
-	user := model.GetUser(fmt.Sprintf("%v", openId))
-
 	fId := c.DefaultQuery("fId", "")
 	folderId := c.Query("folder")
 	if fId == "" {
@@ -98,8 +95,7 @@ func DeleteFile(c *gin.Context) {
 
 	//删除数据库文件数据
 	fIdInt, _ := strconv.Atoi(fId)
-	folderIdInt, _ := strconv.Atoi(folderId)
-	model.DeleteUserFile(fIdInt, folderIdInt, user.FileStoreId)
+	model.DeleteFileById(fIdInt)
 
 	c.Redirect(http.StatusMovedPermanently, "/cloud/file?fid="+folderId)
 }

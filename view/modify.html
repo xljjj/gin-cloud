@@ -13,7 +13,7 @@
     <p class="hint">{{.hint}}</p>
     {{end}}
     <div>
-        <h1 class="userName">欢迎！{{.userName}}</h1>
+        <h1 class="userName">欢迎！{{.user.NickName}}</h1>
     </div>
     <form id="updateUserForm" enctype="multipart/form-data" action="/cloud/modify" method="post">
         <div class="form-group">

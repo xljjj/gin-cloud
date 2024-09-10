@@ -1,15 +1,71 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #4a90e2;
+    color: #fff;
+    padding: 20px;
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+}
+
+h2 {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.usage-section, .file-detail {
+    margin: 20px auto;
+    max-width: 800px;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.usage-stats {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.usage-stats div {
+    flex: 1;
+    text-align: center;
+    padding: 10px;
+}
+
+.chart-container {
+    position: relative;
+    margin: 20px auto;
+    width: 80%;
+    max-width: 600px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
 .button {
-    display: inline-block;
+    background-color: #4a90e2;
+    color: #fff;
     padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    background-color: blue;
-    border: none;
-    border-radius: 5px;
+    margin: 0 10px;
     text-decoration: none;
-    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
 }
 
 .button:hover {
-    background-color: darkblue;
+    background-color: #357ab8;
 }

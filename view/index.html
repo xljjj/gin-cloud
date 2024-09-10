@@ -5,27 +5,53 @@
     <title>GO网盘个人首页</title>
     <link rel="icon" href="/static/img/cloud.png" type="image/png">
     <link rel="stylesheet" href="/static/css/index.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script> <!-- 引入 ECharts -->
 </head>
 <body>
-    <h1>个人首页</h1>
-    <div class="title">
-        <h1>使用情况</h1>
+<header>
+    <h1>{{.user.NickName}}，欢迎使用你的GO网盘！</h1>
+</header>
+
+<section>
+    <h2>使用情况</h2>
+    <div class="usage-stats">
+        <div class="folder-count">
+            <h3>文件夹数量：</h3>
+            <p>{{.fileFolderCount}}</p>
+        </div>
+        <div class="file-count">
+            <h3>文件数量：</h3>
+            <p>{{.fileCount}}</p>
+        </div>
     </div>
-    <div class="folder-count">
-        <h1>文件夹数量：{{.fileFolderCount}}</h1>
+</section>
+
+<section class="usage-section">
+    <h2>容量情况</h2>
+    <div class="chart-container">
+        <div id="capacityChart"></div>
     </div>
-    <div class="file-count">
-        <h1>文件数量：{{.fileCount}}</h1>
+    已使用容量/剩余容量：{{.userFileStore.CurrentSize}}KB/{{.userFileStore.MaxSize}}KB
+</section>
+
+<section class="file-detail">
+    <h2>文件明细</h2>
+    文本：{{.fileDetailUse.docCount}}
+    图像：{{.fileDetailUse.imgCount}}
+    视频：{{.fileDetailUse.videoCount}}
+    音乐：{{.fileDetailUse.musicCount}}
+    其他：{{.fileDetailUse.otherCount}}
+    <div class="chart-container">
+        <div id="fileDetailChart"></div>
     </div>
-    <div class="file-detail">
-        <h1>文件明细</h1>
-    </div>
-    <div>
-        <h1>剩余容量</h1>
-    </div>
-    <div>
-        <a href="/cloud/modify" class="button">修改信息</a>
-        <a href="/cloud/logout" class="button">登出系统</a>
-    </div>
+</section>
+
+<div class="action-buttons">
+    <a href="/cloud/modify" class="button">修改信息</a>
+    <a href="/cloud/logout" class="button">登出系统</a>
+</div>
+
+<script src="/static/js/index.js"></script>
+
 </body>
 </html>

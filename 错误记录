@@ -13,3 +13,6 @@ r.SetFuncMap(template.FuncMap{
 
 P 前端图片路径正确但是无法展示
 S router需配置静态资源目录 r.Static("/avatar", "./avatar")
+
+P html访问map的字段报错 {{.fileDetailUse[docCount]}}
+S 使用.访问 {{.fileDetailUse.docCount}}

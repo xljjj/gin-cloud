@@ -8,9 +8,10 @@ import (
 )
 
 func Index(c *gin.Context) {
-	openId, _ := c.Get("openId")
+	userNameAny, _ := c.Get("userName")
+	userName := fmt.Sprintf("%v", userNameAny)
 	//获取用户信息
-	user := model.GetUser(fmt.Sprintf("%v", openId))
+	user := model.FindSimpleUserByUserName(userName)
 	//获取用户仓库信息
 	userFileStore := model.GetFileStoreByUserId(user.Id)
 	//获取用户文件数量
@@ -22,7 +23,6 @@ func Index(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "index.html", gin.H{
 		"user":            user,
-		"curIndex":        "active",
 		"userFileStore":   userFileStore,
 		"fileCount":       fileCount,
 		"fileFolderCount": fileFolderCount,

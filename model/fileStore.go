@@ -2,6 +2,8 @@ package model
 
 import (
 	"CloudDrive/mysql"
+	"os"
+	"strconv"
 )
 
 // FileStore 文件仓库
@@ -35,4 +37,11 @@ func AddStoreSize(size int64, storeId int) {
 	mysql.DB.First(&fileStore, storeId)
 	fileStore.CurrentSize = fileStore.CurrentSize + size/1024
 	mysql.DB.Save(&fileStore)
+}
+
+func DeleteFileStore(storeId int) (err error) {
+	DeleteStoreAllFile(storeId)
+	DeleteStoreAllFolder(storeId)
+	err = os.RemoveAll("./file/" + strconv.Itoa(storeId))
+	return err
 }

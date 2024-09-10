@@ -83,6 +83,5 @@ func CheckAdmin(c *gin.Context) {
 	// 将用户名及用户ID存储在上下文中
 	user := model.FindSimpleUserByUserName(claims.UserName)
 	c.Set("userName", user.UserName)
-	c.Set("userId", user.Id)
 	c.Next()
 }

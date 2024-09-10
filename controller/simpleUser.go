@@ -4,6 +4,7 @@ import (
 	"CloudDrive/model"
 	"CloudDrive/mysql"
 	"CloudDrive/util"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
@@ -104,17 +105,19 @@ func HandleRegister(c *gin.Context) {
 
 // Modify 修改用户信息
 func Modify(c *gin.Context) {
-	userName, _ := c.Get("userName")
+	userNameAny, _ := c.Get("userName")
+	userName := fmt.Sprintf("%v", userNameAny)
+	user := model.FindSimpleUserByUserName(userName)
 	c.HTML(http.StatusOK, "modify.html", gin.H{
-		"hint":     "",
-		"userName": userName,
+		"hint": "",
+		"user": user,
 	})
 }
 
 // HandleModify 处理修改请求
 func HandleModify(c *gin.Context) {
-	userNameOri, _ := c.Get("userName")
-	userName, _ := userNameOri.(string)
+	userNameAny, _ := c.Get("userName")
+	userName := fmt.Sprintf("%v", userNameAny)
 	currentPassword := c.PostForm("currentPassword")
 	newPassword := c.PostForm("newPassword")
 	confirmPassword := c.PostForm("confirmPassword")

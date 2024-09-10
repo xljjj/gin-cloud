@@ -3,7 +3,9 @@ package model
 import (
 	"CloudDrive/mysql"
 	"CloudDrive/util"
+	"os"
 	"path"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -14,7 +16,6 @@ type MyFile struct {
 	FileName       string //文件名
 	FileHash       string //文件哈希值
 	FileStoreId    int    //文件仓库id
-	FilePath       string //文件存储路径
 	DownloadNum    int    //下载次数
 	UploadTime     string //上传时间
 	ParentFolderId int    //父文件夹id
@@ -38,7 +39,6 @@ func CreateFile(fileFullName string, fileHash string, fileSize int64, fId int, f
 		FileName:       fileName,
 		FileHash:       fileHash,
 		FileStoreId:    fileStoreId,
-		FilePath:       "",
 		DownloadNum:    0,
 		UploadTime:     time.Now().Format("2006-01-02 15:04:05"),
 		ParentFolderId: fId,
@@ -135,9 +135,11 @@ func DownloadNumAdd(fId int) {
 	mysql.DB.Save(&file)
 }
 
-// DeleteUserFile 删除文件夹中的文件
-func DeleteUserFile(fId int, folderId int, storeId int) {
-	mysql.DB.Where("id = ? and file_store_id = ? and parent_folder_id = ?", fId, storeId, folderId).Delete(MyFile{})
+// DeleteFileById 根据ID删除文件
+func DeleteFileById(fId int) {
+	file := GetFileById(fId)
+	mysql.DB.Where("id = ?", fId).Delete(MyFile{})
+	_ = os.Remove("./file" + strconv.Itoa(fId) + file.Suffix)
 }
 
 // DeleteStoreAllFile 删除一个仓库的所有文件

@@ -48,6 +48,13 @@ func DeleteSimpleUser(c *gin.Context) {
 				return
 			}
 		}
+		err := model.DeleteFileStore(s.FileStoreId)
+		if err != nil {
+			c.HTML(http.StatusOK, "admin.html", gin.H{
+				"hint": "删除用户失败！",
+			})
+			return
+		}
 		model.DeleteSimpleUser(&s)
 		c.HTML(http.StatusOK, "admin.html", gin.H{
 			"hint": "用户删除成功！",

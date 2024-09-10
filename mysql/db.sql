@@ -37,14 +37,12 @@ CREATE TABLE `my_file`  (
                             `file_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件名',
                             `file_hash` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件哈希值',
                             `file_store_id` int(10) NULL DEFAULT NULL COMMENT '文件仓库ID',
-                            `file_path` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT '/' COMMENT '文件存储路径',
                             `download_num` int(11) NULL DEFAULT 0 COMMENT '下载次数',
                             `upload_time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '上传时间',
                             `parent_folder_id` int(11) NULL DEFAULT NULL COMMENT '父文件夹ID',
                             `size` int(11) NULL DEFAULT NULL COMMENT '文件大小',
-                            `size_str` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件大小单位',
                             `type` int(11) NULL DEFAULT NULL COMMENT '文件类型',
-                            `postfix` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件后缀',
+                            `suffix` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件后缀',
                             PRIMARY KEY (`id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 243 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
