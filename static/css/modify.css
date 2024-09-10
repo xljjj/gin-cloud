@@ -79,3 +79,23 @@ button:hover {
     text-align: center;
     font-family: Tahoma, Arial, “宋体”, serif;
 }
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.jumpbutton {
+    background-color: #4a90e2;
+    color: #fff;
+    padding: 10px 20px;
+    margin: 0 10px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.jumpbutton:hover {
+    background-color: #357ab8;
+}

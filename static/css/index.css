@@ -56,7 +56,7 @@ h2 {
     margin: 20px 0;
 }
 
-.button {
+.jumpbutton {
     background-color: #4a90e2;
     color: #fff;
     padding: 10px 20px;
@@ -66,6 +66,6 @@ h2 {
     transition: background-color 0.3s;
 }
 
-.button:hover {
+.jumpbutton:hover {
     background-color: #357ab8;
 }

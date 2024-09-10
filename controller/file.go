@@ -11,40 +11,24 @@ import (
 
 // File 文件信息
 func File(c *gin.Context) {
-	openId, _ := c.Get("openId")
-	fId := c.DefaultQuery("fId", "0")
+	userNameAny, _ := c.Get("userName")
+	userName := fmt.Sprintf("%v", userNameAny)
 	//获取用户信息
-	user := model.GetUser(fmt.Sprintf("%v", openId))
+	user := model.FindSimpleUserByUserName(userName)
+	// 获取当前文件夹ID，根目录为0
+	fIdStr := c.DefaultQuery("fId", "0")
+	fId, _ := strconv.Atoi(fIdStr)
+	// 获取当前目录信息
+	folder := model.GetFolderById(fId)
 
 	//获取当前目录所有文件
-	fIdInt, _ := strconv.Atoi(fId)
-	files := model.GetFolderFiles(fIdInt, user.FileStoreId)
-
-	//获取当前目录所有文件夹
-	fileFolder := model.GetChildrenFolders(fIdInt, user.FileStoreId)
-
-	//获取父级的文件夹信息
-	parentFolder := model.GetFolderById(fIdInt)
-
-	//获取当前目录所有父级
-	currentAllParent := model.GetFolderParents(parentFolder)
-
-	//获取当前目录信息
-	currentFolder := model.GetFolderById(fIdInt)
-
-	//获取用户文件使用明细数量
-	fileDetailUse := model.GetFileDetailUse(user.FileStoreId)
+	files := model.GetFolderFiles(fId, user.FileStoreId)
 
 	c.HTML(http.StatusOK, "file.html", gin.H{
-		"currAll":          "active",
-		"user":             user,
-		"fId":              currentFolder.Id,
-		"fName":            currentFolder.FileFolderName,
-		"files":            files,
-		"fileFolder":       fileFolder,
-		"parentFolder":     parentFolder,
-		"currentAllParent": currentAllParent,
-		"fileDetailUse":    fileDetailUse,
+		"user":   user,
+		"fId":    fId,
+		"folder": folder,
+		"files":  files,
 	})
 }
 
