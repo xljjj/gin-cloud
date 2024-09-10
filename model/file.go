@@ -29,7 +29,7 @@ func (MyFile) TableName() string {
 }
 
 // CreateFile 创建文件
-func CreateFile(fileFullName string, fileHash string, fileSize int64, fId int, fileStoreId int) {
+func CreateFile(fileFullName string, fileHash string, fileSize int64, fId int, fileStoreId int) MyFile {
 	//后缀
 	fileSuffix := path.Ext(fileFullName)
 	//文件名
@@ -48,6 +48,7 @@ func CreateFile(fileFullName string, fileHash string, fileSize int64, fId int, f
 	}
 
 	mysql.DB.Create(&myFile)
+	return myFile
 }
 
 // GetFolderFiles 获取文件夹下所有文件

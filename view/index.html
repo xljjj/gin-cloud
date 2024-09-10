@@ -31,7 +31,7 @@
     <div class="chart-container">
         <div id="capacityChart"></div>
     </div>
-    已使用容量/剩余容量：{{.userFileStore.CurrentSize}}KB/{{.userFileStore.MaxSize}}KB
+    已使用容量/总容量：{{.userFileStore.CurrentSize}}KB/{{.userFileStore.MaxSize}}KB
 </section>
 
 <section class="file-detail">
@@ -47,6 +47,7 @@
 </section>
 
 <div class="action-buttons">
+    <a href="/cloud/upload" class="button">上传文件</a>
     <a href="/cloud/modify" class="button">修改信息</a>
     <a href="/cloud/logout" class="button">登出系统</a>
 </div>

@@ -35,7 +35,7 @@ func CheckCapacity(storeId int, fileSize int64) bool {
 func AddStoreSize(size int64, storeId int) {
 	var fileStore FileStore
 	mysql.DB.First(&fileStore, storeId)
-	fileStore.CurrentSize = fileStore.CurrentSize + size/1024
+	fileStore.CurrentSize = fileStore.CurrentSize + size
 	mysql.DB.Save(&fileStore)
 }
 

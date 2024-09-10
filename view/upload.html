@@ -4,111 +4,29 @@
     <meta charset="UTF-8">
     <title>上传文件</title>
     <link rel="icon" href="/static/img/cloud.png" type="image/png">
+    <link rel="stylesheet" href="/static/css/upload.css">
 </head>
 <body>
-<div id="app">
-    <div class="main-wrapper">
-        <div class="navbar-bg"></div>
-        {{template "menu-top" .}}
-        {{template "menu-sidebar" .}}
-        <div class="main-content">
-            <section class="section">
-                <h1 class="section-header">
-                    <div><i class="ion ion-folder"></i> 上传文件
-                        <span style="color: red;font-size: 14px"></span>
-                    </div>
-                </h1>
-                <div class="row">
-                    <div class="col-12 col-sm-12 col-lg-8">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>当前路径</h4>
-                                <nav aria-label="breadcrumb" class="empty-space">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item">
-                                            <a href="/cloud/upload/?fId={{.fId}}" title="刷新"><i
-                                                    class="icon ion-refresh"></i></a>
-                                        </li>
-                                        <li class="breadcrumb-item active">
-                                            {{if eq .fId 0}}
-                                            <span>根目录 &nbsp /</span>
-                                            {{else}}
-                                            <span></span>
-                                            <a style="font-weight: bold" href="/cloud/upload">根目录</a>
-                                            {{end}}
-
-                                        </li>
-
-                                        {{range .currentAllParent}}
-                                        <li class="breadcrumb-item">
-                                            <a style="font-weight: bold"
-                                               href="/cloud/upload?fId={{.Id}}&fName={{.FileFolderName}}">
-                                                {{.FileFolderName}}
-                                            </a>
-                                        </li>
-                                        {{end}}
-
-                                        {{if ne .fId 0}}
-                                        <li class="breadcrumb-item action" aria-current="page">
-                                            {{.fName}}
-                                        </li>
-                                        {{end}}
-
-                                        {{if ne .fId 0}}
-                                        <li class="breadcrumb-item">
-                                            <a href="/cloud/upload?fId={{.parentFolder.ParentFolderId}}"
-                                               title="返回上一层">
-                                                <i class="icon ion-arrow-return-left"></i>
-                                            </a>
-                                        </li>
-                                        {{end}}
-                                    </ol>
-                                </nav>
-                            </div>
-                            <div class="card-body table-responsive">
-                                <div id="uploader" style="margin-top: -10px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-sm-12 col-lg-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h4>预览</h4>
-                            </div>
-                            <div class="card-body">
-                                <div class="row" style="margin-top: -10px;">
-                                    <div class="col-12 col-sm-12 col-lg-12 table-responsive">
-                                        <table class="table tab-bordered text-nowrap" id="files-table">
-                                            {{range .fileFolders}}
-                                            <tr class="files-items folders">
-                                                <td><span style="display: none">{{.Id}}</span>
-                                                    <i style="font-size: 24px;color: orange"
-                                                       class="icon ion-android-folder"></i>
-                                                </td>
-                                                <td>
-                                                    <a href="/cloud/upload?fId={{.Id}}&fName={{.FileFolderName}}" style="font-weight: 700;color: black">
-                                                        {{.FileFolderName}}
-                                                    </a>
-                                                </td>
-                                                <td style="font-weight: 300">
-                                                    {{.Time}}
-                                                </td>
-                                            </tr>
-                                            {{end}}
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <span id="nowF" style="display: none">{{.fId}}</span>
-            <span id="preF" style="display: none"></span>
-            <span id="tarFolder" style="display: none"></span>
+<div class="container">
+    <h2>当前文件夹：</h2>
+    {{if .folder.FileFolderName}}
+    <h2>{{.folder.FileFolderName}}</h2>
+    {{else}}
+    <h1>根目录</h1>
+    {{end}}
+    <h1>文件上传</h1>
+    <form id="uploadForm" enctype="multipart/form-data">
+        <input type="hidden" id="fid" name="fid" value="{{.fId}}">
+        <div>
+            <label for="fileInput">选择文件:</label>
+            <input type="file" id="fileInput" name="file">
         </div>
-        {{template "menu-footer"}}
-    </div>
+        <div>
+            <button type="button" id="uploadButton">上传</button>
+        </div>
+        <div id="status"></div>
+    </form>
 </div>
+<script src="/static/js/upload.js"></script>
 </body>
 </html>

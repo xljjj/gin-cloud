@@ -39,7 +39,7 @@ CREATE TABLE `my_file`  (
                             `file_store_id` int(10) NULL DEFAULT NULL COMMENT '文件仓库ID',
                             `download_num` int(11) NULL DEFAULT 0 COMMENT '下载次数',
                             `upload_time` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '上传时间',
-                            `parent_folder_id` int(11) NULL DEFAULT NULL COMMENT '父文件夹ID',
+                            `parent_folder_id` int(11)  NOT NULL DEFAULT 0 COMMENT '父文件夹ID',
                             `size` int(11) NULL DEFAULT NULL COMMENT '文件大小',
                             `type` int(11) NULL DEFAULT NULL COMMENT '文件类型',
                             `suffix` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '文件后缀',

@@ -14,5 +14,8 @@ r.SetFuncMap(template.FuncMap{
 P 前端图片路径正确但是无法展示
 S router需配置静态资源目录 r.Static("/avatar", "./avatar")
 
-P html访问map的字段报错 {{.fileDetailUse[docCount]}}
-S 使用.访问 {{.fileDetailUse.docCount}}
+P 根据mysql查询结果判断结构体是否非空 {{if .folder}}
+S 查询结果是空结构体，应判断字段{{if .folder.FileFolderName}}
+
+P 将文件流转换为字节数组为空
+S 由于文件流已被使用（复制到本地），文件指针变化，最简单解决：重新获取

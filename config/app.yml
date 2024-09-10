@@ -17,4 +17,3 @@ oss:
   BucketName: ""
 app:
   JWTKey: "xljjj"
-  upload: "/upload"
