@@ -2,11 +2,14 @@ package controller
 
 import (
 	"CloudDrive/model"
-	"CloudDrive/util"
+	"CloudDrive/redis"
+	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
 	"strconv"
+	"time"
 )
 
 // File 文件信息
@@ -52,36 +55,72 @@ func AddFolder(c *gin.Context) {
 
 // DownloadFile 下载文件
 func DownloadFile(c *gin.Context) {
-	fIdStr := c.Query("fId")
-	fId, _ := strconv.Atoi(fIdStr)
-
-	file := model.GetFileById(fId)
-	if file.FileHash == "" {
+	//fIdStr := c.DefaultQuery("fId","0")  //文件夹ID
+	//fId, _ := strconv.Atoi(fIdStr)
+	fileIdStr := c.Query("fileId")
+	if fileIdStr == "" {
 		return
 	}
-
-	//从oss获取文件
-	fileData := util.DownloadOss(file.FileHash, file.Suffix)
-	//下载次数+1
-	model.DownloadNumAdd(fId)
-
-	c.Header("Content-disposition", "attachment;filename=\""+file.FileName+file.Suffix+"\"")
-	c.Data(http.StatusOK, "application/octect-stream", fileData)
+	fileId, _ := strconv.Atoi(fileIdStr)
+	file := model.GetFileById(fileId)
+	if file.FileName == "" {
+		return
+	}
+	// Redis中有文件数据则从Redis中取出
+	// 新建一个带有超时的上下文
+	ctx, cancel := context.WithTimeout(context.Background(), time.Minute)
+	defer cancel() // 操作完成后调用取消函数，避免资源泄漏
+	flag, err := redis.KeyExists(ctx, fileIdStr)
+	if flag && err == nil {
+		fileData, _ := redis.GetKey(ctx, fileIdStr)
+		// 设置 Content-Disposition 头，提示浏览器下载文件
+		c.Header("Content-Disposition", "attachment; filename="+file.FileName+file.Suffix)
+		c.Header("Content-Type", "application/octet-stream")
+		// 返回文件内容
+		c.Data(http.StatusOK, "application/octet-stream", []byte(fileData))
+	} else {
+		// 根据 fileId 确定文件路径
+		filePath := "./file/" + strconv.Itoa(file.FileStoreId) + "/" + file.FileName + file.Suffix
+		// 设置 Content-Disposition 头，提示浏览器下载文件
+		c.Header("Content-Disposition", "attachment; filename="+file.FileName+file.Suffix)
+		c.Header("Content-Type", "application/octet-stream")
+		// 下载次数+1
+		model.DownloadNumAdd(fileId)
+		// 返回文件内容
+		c.File(filePath)
+	}
 }
 
 // DeleteFile 删除文件
 func DeleteFile(c *gin.Context) {
-	fId := c.DefaultQuery("fId", "")
-	folderId := c.Query("folder")
-	if fId == "" {
+	//fIdStr := c.DefaultQuery("fId","0")  //文件夹ID
+	//fId, _ := strconv.Atoi(fIdStr)
+	fileIdStr := c.GetHeader("fileId")
+	if fileIdStr == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "文件请求不存在"})
 		return
 	}
-
-	//删除数据库文件数据
-	fIdInt, _ := strconv.Atoi(fId)
-	model.DeleteFileById(fIdInt)
-
-	c.Redirect(http.StatusMovedPermanently, "/cloud/file?fid="+folderId)
+	fileId, _ := strconv.Atoi(fileIdStr)
+	file := model.GetFileById(fileId)
+	if file.FileName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "文件存储不存在"})
+		return
+	}
+	// 删除文件存储
+	err := os.Remove("./file/" + strconv.Itoa(file.FileStoreId) + "/" + file.FileName + file.Suffix)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "删除文件失败",
+		})
+		return
+	}
+	// 加回用户可用容量
+	model.AddStoreSize(-file.Size, file.FileStoreId)
+	// 删除数据库文件数据
+	model.DeleteFileById(fileId)
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+	})
 }
 
 // DeleteFileFolder 删除文件夹

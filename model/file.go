@@ -42,7 +42,7 @@ func CreateFile(fileFullName string, fileHash string, fileSize int64, fId int, f
 		DownloadNum:    0,
 		UploadTime:     time.Now().Format("2006-01-02 15:04:05"),
 		ParentFolderId: fId,
-		Size:           fileSize / 1024,
+		Size:           fileSize,
 		Type:           util.GetFileTypeInt(fileSuffix),
 		Suffix:         strings.ToLower(fileSuffix),
 	}

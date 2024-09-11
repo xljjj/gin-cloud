@@ -53,6 +53,7 @@ func HandleUpload(c *gin.Context) {
 	// 获取文件名和文件长度
 	fileName := header.Filename
 	fileSize := header.Size
+	KBSize := (fileSize + 1023) / 1024 //为方便处理，统一单位为KB，不足1KB当成1KB
 
 	//判断当前文件夹是否有同名文件
 	if model.FileExist(fId, fileName) {
@@ -63,7 +64,7 @@ func HandleUpload(c *gin.Context) {
 	}
 
 	//判断用户的容量是否足够
-	if ok := model.CheckCapacity(user.FileStoreId, fileSize/1024); !ok {
+	if ok := model.CheckCapacity(user.FileStoreId, KBSize); !ok {
 		c.JSON(http.StatusForbidden, gin.H{
 			"error": "用户剩余容量不足！",
 		})
@@ -86,13 +87,13 @@ func HandleUpload(c *gin.Context) {
 		})
 		return
 	}
-	myFile := model.CreateFile(fileName, "", fileSize, fId, user.FileStoreId)
+	myFile := model.CreateFile(fileName, "", KBSize, fId, user.FileStoreId)
 
 	// 上传成功后增加现有容量
-	model.AddStoreSize(fileSize/1024, user.FileStoreId)
+	model.AddStoreSize(KBSize, user.FileStoreId)
 
 	// 如果文件较小，将文件存入Redis
-	if fileSize/1024 <= 100 {
+	if KBSize <= 100 {
 		//重新获得文件流
 		file, _, _ = c.Request.FormFile("file")
 		fileContent, _ := io.ReadAll(file)

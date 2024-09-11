@@ -4,10 +4,50 @@
     <meta charset="UTF-8">
     <title>用户文件</title>
     <link rel="icon" href="/static/img/cloud.png" type="image/png">
+    <link rel="stylesheet" href="/static/css/file.css">
 </head>
 <body>
 <header>
     <h1>{{.user.NickName}}，在此查看所有的文件！</h1>
+    <h2>当前文件夹：</h2>
+    {{if .folder.FileFolderName}}
+    <h2>{{.folder.FileFolderName}}</h2>
+    {{else}}
+    <h2>根目录</h2>
+    {{end}}
 </header>
+    <div class="container">
+        <table class="file-table">
+            <thead>
+            <tr>
+                <th>文件名</th>
+                <th>下载次数</th>
+                <th>上传时间</th>
+                <th>文件大小（KB）</th>
+                <th>文件操作</th>
+            </tr>
+            </thead>
+            <tbody id="file-list">
+            {{ range .files }}
+            <tr>
+                <td>{{concat .FileName .Suffix}}</td>
+                <td>{{ .DownloadNum }}</td>
+                <td>{{ .UploadTime }}</td>
+                <td>{{ .Size }}</td>
+                <td>
+                    <button class="btn view-btn" onclick="viewFile('{{ .Id }}')">查看</button>
+                    <button class="btn download-btn" onclick="downloadFile('{{ .Id }}')">下载</button>
+                    <button class="btn delete-btn" onclick="deleteFile('{{ .Id }}')">删除</button>
+                </td>
+            </tr>
+            {{ end }}
+            </tbody>
+        </table>
+        <div id="status"></div>
+    </div>
+    <div class="action-buttons">
+        <a href="/cloud/index" class="jumpbutton">返回首页</a>
+    </div>
+<script src="/static/js/file.js"></script>
 </body>
 </html>
