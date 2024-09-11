@@ -14,6 +14,7 @@ func Router() *gin.Engine {
 	router.GET("/login", controller.Login)
 	router.GET("/qq-login", controller.HandleLogin)
 	router.GET("/register", controller.Register)
+	router.GET("/help", controller.Help)
 
 	router.POST("/register", controller.HandleRegister)
 	router.POST("/simple-login", controller.HandleSimpleLogin)
@@ -22,7 +23,6 @@ func Router() *gin.Engine {
 	cloud.Use(middleware.CheckSimpleLogin)
 	{
 		cloud.GET("/index", controller.Index)
-		cloud.GET("/help", controller.Help)
 		cloud.GET("/file", controller.File)
 		cloud.GET("/upload", controller.Upload)
 		cloud.GET("/logout", controller.SimpleLogout)
