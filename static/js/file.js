@@ -21,11 +21,8 @@ function deleteFile(fileId) {
     let curURL=window.location.href
     const statusDiv = document.getElementById('status');
     if (confirm('确定删除此文件？')) {
-        fetch('/cloud/deleteFile', {
-            method: 'GET',
-            headers: {
-                'fileId': fileId
-            },
+        fetch(`/cloud/deleteFile?fileId=${encodeURIComponent(fileId)}`, {
+            method: 'DELETE',
         })
             .then(response => response.json())
             .then(data => {

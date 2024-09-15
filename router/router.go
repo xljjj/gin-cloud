@@ -27,8 +27,7 @@ func Router() *gin.Engine {
 		cloud.GET("/file", controller.File)
 		cloud.GET("/upload", controller.Upload)
 		cloud.GET("/downloadFile", controller.DownloadFile)
-		cloud.GET("/deleteFile", controller.DeleteFile)
-		cloud.GET("/deleteFolder", controller.DeleteFileFolder)
+		cloud.GET("/viewFile", controller.ViewFile)
 		cloud.GET("/modify", controller.Modify)
 	}
 	{
@@ -37,6 +36,10 @@ func Router() *gin.Engine {
 		cloud.POST("/uploadFile", controller.HandleUpload)
 		cloud.POST("/getQRCode", controller.ShareFile)
 		cloud.POST("/modify", controller.HandleModify)
+	}
+	{
+		cloud.DELETE("/deleteFile", controller.DeleteFile)
+		cloud.DELETE("/deleteFolder", controller.DeleteFileFolder)
 	}
 
 	admin := router.Group("admin")
