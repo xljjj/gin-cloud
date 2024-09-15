@@ -22,3 +22,6 @@ S 由于文件流已被使用（复制到本地），文件指针变化，最简
 
 P <a href='{{concat "/cloud/upload?fid=" .fId}}' class="jumpbutton">上传文件</a> fid要求为字符串
 S 后端传递了int，为方便新增传递string，建议以后前后端参数传递全部使用string
+
+P fetch修改为DELETE方法，日志打印里还是发送GET请求
+S 清除浏览器缓存
