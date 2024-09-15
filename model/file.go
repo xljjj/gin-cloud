@@ -102,7 +102,7 @@ func GetFilesByType(fileType int, fileStoreId int) (files []MyFile) {
 	return files
 }
 
-// FileExist 判断文件是否已存在
+// FileExist 判断文件在当前文件夹下是否已存在
 func FileExist(fId int, fileFullName string) bool {
 	var file MyFile
 	//获取文件后缀
@@ -146,4 +146,17 @@ func DeleteFileById(fId int) {
 // DeleteStoreAllFile 删除一个仓库的所有文件
 func DeleteStoreAllFile(storeId int) {
 	mysql.DB.Where("file_store_id = ?", storeId).Delete(MyFile{})
+}
+
+// GetFilePath 获取文件相对于存储位置的路径
+func GetFilePath(file MyFile) string {
+	var filePath string
+	if file.ParentFolderId == 0 {
+		filePath = "/" + strconv.Itoa(file.FileStoreId)
+	} else {
+		folder := GetFolderById(file.ParentFolderId)
+		filePath = GetFolderPath(folder)
+	}
+	filePath += "/" + file.FileName + file.Suffix
+	return filePath
 }

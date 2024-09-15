@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-// File 文件信息
+// File 用户所有文件信息
 func File(c *gin.Context) {
 	userNameAny, _ := c.Get("userName")
 	userName := fmt.Sprintf("%v", userNameAny)
@@ -29,7 +29,7 @@ func File(c *gin.Context) {
 
 	c.HTML(http.StatusOK, "file.html", gin.H{
 		"user":   user,
-		"fId":    fId,
+		"fIdStr": fIdStr,
 		"folder": folder,
 		"files":  files,
 	})
@@ -55,8 +55,6 @@ func AddFolder(c *gin.Context) {
 
 // DownloadFile 下载文件
 func DownloadFile(c *gin.Context) {
-	//fIdStr := c.DefaultQuery("fId","0")  //文件夹ID
-	//fId, _ := strconv.Atoi(fIdStr)
 	fileIdStr := c.Query("fileId")
 	if fileIdStr == "" {
 		return
@@ -80,7 +78,7 @@ func DownloadFile(c *gin.Context) {
 		c.Data(http.StatusOK, "application/octet-stream", []byte(fileData))
 	} else {
 		// 根据 fileId 确定文件路径
-		filePath := "./file/" + strconv.Itoa(file.FileStoreId) + "/" + file.FileName + file.Suffix
+		filePath := "./file" + model.GetFilePath(file)
 		// 设置 Content-Disposition 头，提示浏览器下载文件
 		c.Header("Content-Disposition", "attachment; filename="+file.FileName+file.Suffix)
 		c.Header("Content-Type", "application/octet-stream")
@@ -93,8 +91,6 @@ func DownloadFile(c *gin.Context) {
 
 // DeleteFile 删除文件
 func DeleteFile(c *gin.Context) {
-	//fIdStr := c.DefaultQuery("fId","0")  //文件夹ID
-	//fId, _ := strconv.Atoi(fIdStr)
 	fileIdStr := c.GetHeader("fileId")
 	if fileIdStr == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "文件请求不存在"})
@@ -107,7 +103,8 @@ func DeleteFile(c *gin.Context) {
 		return
 	}
 	// 删除文件存储
-	err := os.Remove("./file/" + strconv.Itoa(file.FileStoreId) + "/" + file.FileName + file.Suffix)
+	filePath := "./file" + model.GetFilePath(file)
+	err := os.Remove(filePath)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "删除文件失败",
@@ -121,6 +118,21 @@ func DeleteFile(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
 		"code": 200,
 	})
+}
+
+// ViewFile 查看文件
+func ViewFile(c *gin.Context) {
+	fileIdStr := c.GetHeader("fileId")
+	if fileIdStr == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "文件请求不存在"})
+		return
+	}
+	fileId, _ := strconv.Atoi(fileIdStr)
+	file := model.GetFileById(fileId)
+	if file.FileName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "文件存储不存在"})
+		return
+	}
 }
 
 // DeleteFileFolder 删除文件夹

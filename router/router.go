@@ -23,9 +23,9 @@ func Router() *gin.Engine {
 	cloud.Use(middleware.CheckSimpleLogin)
 	{
 		cloud.GET("/index", controller.Index)
+		cloud.GET("/logout", controller.SimpleLogout)
 		cloud.GET("/file", controller.File)
 		cloud.GET("/upload", controller.Upload)
-		cloud.GET("/logout", controller.SimpleLogout)
 		cloud.GET("/downloadFile", controller.DownloadFile)
 		cloud.GET("/deleteFile", controller.DeleteFile)
 		cloud.GET("/deleteFolder", controller.DeleteFileFolder)

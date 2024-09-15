@@ -2,6 +2,7 @@ package model
 
 import (
 	"CloudDrive/mysql"
+	"strconv"
 	"time"
 )
 
@@ -56,6 +57,17 @@ func GetFolderParents(folder FileFolder) (fileFolders []FileFolder) {
 		fileFolders[i], fileFolders[n-i-1] = fileFolders[n-i-1], fileFolders[i]
 	}
 	return fileFolders
+}
+
+// GetFolderPath 获取文件夹相对存储位置的路径
+func GetFolderPath(folder FileFolder) string {
+	path := "/" + strconv.Itoa(folder.FileStoreId) + "/"
+	parents := GetFolderParents(folder)
+	for _, value := range parents {
+		path += value.FileFolderName + "/"
+	}
+	path += folder.FileFolderName
+	return path
 }
 
 // GetUserFolderNum 获取用户仓库文件夹的数目

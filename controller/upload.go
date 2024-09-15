@@ -72,7 +72,14 @@ func HandleUpload(c *gin.Context) {
 	}
 
 	// 新建文件
-	newFile, err := os.Create("./file/" + strconv.Itoa(user.FileStoreId) + "/" + fileName)
+	var filePath string
+	if fId == 0 {
+		filePath = "./file/" + strconv.Itoa(user.FileStoreId) + "/" + fileName
+	} else {
+		folder := model.GetFolderById(fId)
+		filePath = model.GetFolderPath(folder) + "/" + fileName
+	}
+	newFile, err := os.Create(filePath)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "无法新建文件",
