@@ -26,23 +26,24 @@
     </div>
 </section>
 
-<section class="usage-section">
+<section class="usage-section"
+         data-current-size="{{.userFileStore.CurrentSize}}"
+         data-max-size="{{.userFileStore.MaxSize}}">
     <h2>容量情况</h2>
     <div class="chart-container">
-        <div id="capacityChart"></div>
+        <canvas id="capacityChart"></canvas>
     </div>
-    已使用容量/总容量：{{.userFileStore.CurrentSize}}KB/{{.userFileStore.MaxSize}}KB
 </section>
 
-<section class="file-detail">
+<section class="file-detail"
+         data-doc-count="{{.fileDetailUse.docCount}}"
+         data-img-count="{{.fileDetailUse.imgCount}}"
+         data-video-count="{{.fileDetailUse.videoCount}}"
+         data-music-count="{{.fileDetailUse.musicCount}}"
+         data-other-count="{{.fileDetailUse.otherCount}}">
     <h2>文件明细</h2>
-    文本：{{.fileDetailUse.docCount}}
-    图像：{{.fileDetailUse.imgCount}}
-    视频：{{.fileDetailUse.videoCount}}
-    音乐：{{.fileDetailUse.musicCount}}
-    其他：{{.fileDetailUse.otherCount}}
     <div class="chart-container">
-        <div id="fileDetailChart"></div>
+        <canvas id="fileDetailChart"></canvas>
     </div>
 </section>
 
@@ -53,6 +54,7 @@
     <a href="/admin/index" class="jumpbutton">管理员入口</a>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="/static/js/index.js"></script>
 
 </body>
