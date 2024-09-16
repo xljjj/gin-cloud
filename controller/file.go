@@ -105,15 +105,17 @@ func DeleteFile(c *gin.Context) {
 
 // ViewFile 查看文件
 func ViewFile(c *gin.Context) {
-	fileIdStr := c.GetHeader("fileId")
+	fileIdStr := c.Query("fileId")
 	if fileIdStr == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "文件请求不存在"})
+		c.String(http.StatusNotFound, "文件不存在")
 		return
 	}
 	fileId, _ := strconv.Atoi(fileIdStr)
 	file := model.GetFileById(fileId)
 	if file.FileName == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "文件存储不存在"})
+		c.String(http.StatusNotFound, "文件不存在")
 		return
 	}
+	filePath := "/file" + model.GetFilePath(file)
+	c.String(http.StatusOK, filePath)
 }

@@ -1,11 +1,25 @@
 // 查看文件
 function viewFile(fileId) {
-
+    const statusDiv = document.getElementById('status');
+    fetch(`/cloud/viewFile?fileId=${encodeURIComponent(fileId)}`, {
+        method: 'GET',
+    })
+        .then(response => response.text())
+        .then(filePath => {
+            if (filePath){
+                window.open(filePath, '_blank');
+            }else{
+                statusDiv.textContent='文件不存在';
+            }
+        })
+        .catch(error => {
+            statusDiv.textContent = '因网络原因文件查看失败';
+        });
 }
 
 // 下载文件
 function downloadFile(fileId) {
-    let curURL=window.location.href
+    const curURL=window.location.href
     // 创建一个隐藏的 <a> 标签用于下载
     const link = document.createElement('a');
     link.href = `/cloud/downloadFile?fileId=${encodeURIComponent(fileId)}`;
@@ -18,7 +32,7 @@ function downloadFile(fileId) {
 
 // 删除文件
 function deleteFile(fileId) {
-    let curURL=window.location.href
+    const curURL=window.location.href
     const statusDiv = document.getElementById('status');
     if (confirm('确定删除此文件？')) {
         fetch(`/cloud/deleteFile?fileId=${encodeURIComponent(fileId)}`, {

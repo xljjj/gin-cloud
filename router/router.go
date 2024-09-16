@@ -4,10 +4,13 @@ import (
 	"CloudDrive/controller"
 	"CloudDrive/middleware"
 	"github.com/gin-gonic/gin"
+	"net/http"
 )
 
 func Router() *gin.Engine {
 	router := gin.Default()
+
+	router.Use(middleware.CheckInput)
 
 	router.GET("", controller.Welcome)
 	router.GET("/welcome", controller.Welcome)
@@ -18,6 +21,12 @@ func Router() *gin.Engine {
 
 	router.POST("/register", controller.HandleRegister)
 	router.POST("/simple-login", controller.HandleSimpleLogin)
+
+	// 自定义404页面
+	router.NoRoute(func(c *gin.Context) {
+		// 返回自定义的404页面内容
+		c.HTML(http.StatusNotFound, "404.html", gin.H{})
+	})
 
 	cloud := router.Group("cloud")
 	cloud.Use(middleware.CheckSimpleLogin)

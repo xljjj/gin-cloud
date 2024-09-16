@@ -23,6 +23,7 @@ func main() {
 	r.LoadHTMLGlob("view/*")        //配置页面路径
 	r.Static("/static", "./static") //配置静态资源目录
 	r.Static("/avatar", "./avatar")
+	r.Static("/file", "./file") //静态文件服务，提供对 file 文件夹的访问
 
 	if err := r.Run(":8080"); err != nil {
 		log.Fatal("无法启动服务器")
