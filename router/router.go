@@ -41,14 +41,14 @@ func Router() *gin.Engine {
 	}
 	{
 		cloud.POST("/addFolder", controller.AddFolder)
-		cloud.POST("/updateFolder", controller.UpdateFileFolder)
+		cloud.POST("/updateFolder", controller.UpdateFolder)
 		cloud.POST("/uploadFile", controller.HandleUpload)
 		cloud.POST("/getQRCode", controller.ShareFile)
 		cloud.POST("/modify", controller.HandleModify)
 	}
 	{
 		cloud.DELETE("/deleteFile", controller.DeleteFile)
-		cloud.DELETE("/deleteFolder", controller.DeleteFileFolder)
+		cloud.DELETE("/deleteFolder", controller.DeleteFolder)
 	}
 
 	admin := router.Group("admin")

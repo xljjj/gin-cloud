@@ -52,3 +52,85 @@ function deleteFile(fileId) {
             });
     }
 }
+
+// 查看文件夹
+function viewFolder(folderId){
+    window.location.href=`/cloud/file?fId=${encodeURIComponent(folderId)}`
+}
+
+// 新建文件夹
+function createFolder(parentId){
+    const statusDiv = document.getElementById('status');
+    const curURL=window.location.href
+
+    // 弹出输入框让用户输入文件夹名
+    const folderName = prompt("请输入新文件夹的名称:");
+
+    if (!folderName) {
+        statusDiv.textContent = '未输入文件夹名！';
+        return;
+    }
+
+    const data = {
+        folderName: folderName,
+        parentId: parentId
+    };
+
+    fetch('/cloud/addFolder', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then(response => response.json())
+        .then(data => {
+            if (data.error){
+                statusDiv.textContent='文件夹创建失败，原因：'+data.error;
+            }else{
+                alert("文件夹创建成功！")
+                window.location.href = curURL;
+            }
+        })
+        .catch(error => {
+            statusDiv.textContent = '因网络原因文件夹创建失败';
+        });
+}
+
+// 修改文件夹
+function updateFolder(parentId,folderId){
+    const statusDiv = document.getElementById('status');
+    const curURL=window.location.href
+
+    // 弹出输入框让用户输入文件夹名
+    const folderName = prompt("请输入新文件夹的名称:");
+
+    if (!folderName) {
+        statusDiv.textContent = '未输入文件夹名！';
+        return;
+    }
+
+    const data = {
+        folderName: folderName,
+        folderId: folderId,
+        parentId: parentId
+    };
+
+    fetch('/cloud/updateFolder', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    }).then(response => response.json())
+        .then(data => {
+            if (data.error){
+                statusDiv.textContent='文件夹更名失败，原因：'+data.error;
+            }else{
+                alert("文件夹更名成功！")
+                window.location.href = curURL;
+            }
+        })
+        .catch(error => {
+            statusDiv.textContent = '因网络原因文件夹更名失败';
+        });
+}

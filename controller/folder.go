@@ -5,53 +5,101 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
 	"strconv"
 )
 
 // AddFolder 新建文件夹
 func AddFolder(c *gin.Context) {
-	openId, _ := c.Get("openId")
-	user := model.GetUser(fmt.Sprintf("%v", openId))
+	userNameAny, _ := c.Get("userName")
+	userName := fmt.Sprintf("%v", userNameAny)
+	//获取用户信息
+	user := model.FindSimpleUserByUserName(userName)
 
-	folderName := c.PostForm("fileFolderName")
-	parentIdStr := c.DefaultPostForm("parentFolderId", "0")
-	parentId, _ := strconv.Atoi(parentIdStr)
+	// 用于接收 JSON 请求体的数据结构
+	var requestData struct {
+		FolderName string `json:"folderName"`
+		ParentId   string `json:"parentId"`
+	}
 
-	//新建文件夹数据
-	model.CreateFileFolder(folderName, parentId, user.FileStoreId)
-
-	//获取父文件夹信息
-	parent := model.GetFolderById(parentId)
-
-	c.Redirect(http.StatusMovedPermanently, "/cloud/file?fId="+parentIdStr+"&fName="+parent.FileFolderName)
-}
-
-// DeleteFileFolder 删除文件夹
-func DeleteFileFolder(c *gin.Context) {
-	fId := c.DefaultQuery("fId", "")
-	if fId == "" {
+	// 解析 JSON 请求体
+	if err := c.ShouldBindJSON(&requestData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的请求"})
 		return
 	}
 
-	//获取要删除的文件夹信息 取到父级目录重定向
-	fIdInt, _ := strconv.Atoi(fId)
-	folderInfo := model.GetFolderById(fIdInt)
+	folderName := requestData.FolderName
+	parentId, _ := strconv.Atoi(requestData.ParentId)
 
-	//删除文件夹并删除文件夹中的文件信息
-	model.DeleteFileFolder(fIdInt)
+	if model.FolderNameExists(parentId, folderName) {
+		c.JSON(http.StatusForbidden, gin.H{"error": "文件名已存在！"})
+		return
+	}
 
-	c.Redirect(http.StatusMovedPermanently, "/cloud/file?fId="+strconv.Itoa(folderInfo.ParentFolderId))
+	//新建文件夹数据
+	folder := model.CreateFileFolder(folderName, parentId, user.FileStoreId)
+
+	//创建路径
+	folderPath := "./file" + model.GetFolderPath(folder)
+	_ = os.MkdirAll(folderPath, os.ModePerm)
+
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+	})
 }
 
-// UpdateFileFolder 修改文件夹名
-func UpdateFileFolder(c *gin.Context) {
-	fileFolderName := c.PostForm("fileFolderName")
-	fileFolderId := c.PostForm("fileFolderId")
+// UpdateFolder 修改文件夹名
+func UpdateFolder(c *gin.Context) {
+	// 用于接收 JSON 请求体的数据结构
+	var requestData struct {
+		FolderName string `json:"folderName"`
+		FolderId   string `json:"folderId"`
+		ParentId   string `json:"parentId"`
+	}
 
-	fileFolderIdInt, _ := strconv.Atoi(fileFolderId)
-	fileFolder := model.GetFolderById(fileFolderIdInt)
+	// 解析 JSON 请求体
+	if err := c.ShouldBindJSON(&requestData); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "无效的请求"})
+		return
+	}
 
-	model.UpdateFolderName(fileFolderIdInt, fileFolderName)
+	folderName := requestData.FolderName
+	folderId, _ := strconv.Atoi(requestData.FolderId)
+	parentId, _ := strconv.Atoi(requestData.ParentId)
 
-	c.Redirect(http.StatusMovedPermanently, "/cloud/file?fId="+strconv.Itoa(fileFolder.ParentFolderId))
+	folder := model.GetFolderById(folderId)
+
+	if folder.FileFolderName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "文件夹不存在"})
+		return
+	}
+
+	if model.FolderNameExists(parentId, folderName) {
+		c.JSON(http.StatusForbidden, gin.H{"error": "新文件名已存在！"})
+		return
+	}
+
+	model.UpdateFolderName(folderId, folderName)
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+	})
+}
+
+// DeleteFolder 删除文件夹
+func DeleteFolder(c *gin.Context) {
+	folderIdStr := c.Query("folderId")
+	if folderIdStr == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "文件夹请求不存在"})
+		return
+	}
+	folderId, _ := strconv.Atoi(folderIdStr)
+	folder := model.GetFolderById(folderId)
+	if folder.FileFolderName == "" {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "文件夹不存在"})
+		return
+	}
+	model.DeleteFileFolder(folderId)
+	c.JSON(http.StatusOK, gin.H{
+		"code": 200,
+	})
 }

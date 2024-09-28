@@ -17,6 +17,29 @@
     {{end}}
 </header>
     <div class="container">
+        <button class="btn create-btn" onclick="createFolder('{{.fIdStr}}')">新建文件夹</button>
+        <table class="folder-table">
+            <thead>
+            <tr>
+                <th>文件夹名</th>
+                <th>创建时间</th>
+                <th>文件夹操作</th>
+            </tr>
+            </thead>
+            <tbody id="folder-list">
+            {{ range .subfolders }}
+            <tr>
+                <td>{{.FileFolderName}}</td>
+                <td>{{.Time}}</td>
+                <td>
+                    <button class="btn view-btn" onclick="viewFolder('{{ .Id }}')">进入</button>
+                    <button class="btn update-btn" onclick="updateFolder('{{$.fIdStr}}','{{ .Id }}')">更名</button>
+                    <button class="btn delete-btn" onclick="deleteFolder('{{ .Id }}')">删除</button>
+                </td>
+            </tr>
+            {{ end }}
+            </tbody>
+        </table>
         <table class="file-table">
             <thead>
             <tr>
@@ -46,8 +69,7 @@
         <div id="status"></div>
     </div>
     <div class="action-buttons">
-        <a href='{{concat "/cloud/upload?fid=" .fIdStr}}' class="jumpbutton">上传文件</a>
-        <a href="/cloud/index" class="jumpbutton">新建文件夹</a>
+        <a href='{{concat "/cloud/upload?fId=" .fIdStr}}' class="jumpbutton">上传文件</a>
         <a href="/cloud/index" class="jumpbutton">返回首页</a>
     </div>
 <script src="/static/js/file.js"></script>

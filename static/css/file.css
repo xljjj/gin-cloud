@@ -25,24 +25,24 @@ h2{
     text-align: center;
 }
 
-.file-table {
+.file-table, .folder-table{
     width: 100%;
     border-collapse: collapse;
     margin-top: 10px;
 }
 
-.file-table th, .file-table td {
+.file-table th, .file-table td, .folder-table th, .folder-table td {
     padding: 12px 15px;
     text-align: left;
     border: 1px solid #ddd;
 }
 
-.file-table th {
+.file-table th, .folder-table th {
     background-color: #f0f4f8;
     color: #555;
 }
 
-.file-table tr:nth-child(even) {
+.file-table tr:nth-child(even), .folder-table tr:nth-child(even) {
     background-color: #f9f9f9;
 }
 
@@ -67,6 +67,16 @@ h2{
 .delete-btn {
     background-color: #dc3545;
     color: white;
+}
+
+.update-btn{
+    background-color: #bf80ff;
+    color:white;
+}
+
+.create-btn{
+    background-color: aquamarine;
+    color:white;
 }
 
 .btn:hover {

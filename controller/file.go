@@ -18,20 +18,23 @@ func File(c *gin.Context) {
 	userName := fmt.Sprintf("%v", userNameAny)
 	//获取用户信息
 	user := model.FindSimpleUserByUserName(userName)
-	// 获取当前文件夹ID，根目录为0
+	//获取当前文件夹ID，根目录为0
 	fIdStr := c.DefaultQuery("fId", "0")
 	fId, _ := strconv.Atoi(fIdStr)
-	// 获取当前目录信息
+	//获取当前目录信息
 	folder := model.GetFolderById(fId)
+	//获取当前子目录
+	subfolders := model.GetChildrenFolders(fId, user.FileStoreId)
 
 	//获取当前目录所有文件
 	files := model.GetFolderFiles(fId, user.FileStoreId)
 
 	c.HTML(http.StatusOK, "file.html", gin.H{
-		"user":   user,
-		"fIdStr": fIdStr,
-		"folder": folder,
-		"files":  files,
+		"user":       user,
+		"fIdStr":     fIdStr,
+		"folder":     folder,
+		"subfolders": subfolders,
+		"files":      files,
 	})
 }
 
@@ -74,7 +77,6 @@ func DownloadFile(c *gin.Context) {
 // DeleteFile 删除文件
 func DeleteFile(c *gin.Context) {
 	fileIdStr := c.Query("fileId")
-	fmt.Println("fileIdStr:", fileIdStr)
 	if fileIdStr == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "文件请求不存在"})
 		return

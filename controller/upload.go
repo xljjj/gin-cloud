@@ -22,6 +22,7 @@ func Upload(c *gin.Context) {
 	// 获取当前文件夹ID，根目录为0
 	fIdStr := c.DefaultQuery("fId", "0")
 	fId, _ := strconv.Atoi(fIdStr)
+	fmt.Println("folder:", fId)
 	// 获取当前目录信息
 	folder := model.GetFolderById(fId)
 
@@ -77,9 +78,11 @@ func HandleUpload(c *gin.Context) {
 		filePath = "./file/" + strconv.Itoa(user.FileStoreId) + "/" + fileName
 	} else {
 		folder := model.GetFolderById(fId)
-		filePath = model.GetFolderPath(folder) + "/" + fileName
+		filePath = "./file" + model.GetFolderPath(folder) + "/" + fileName
 	}
+
 	newFile, err := os.Create(filePath)
+
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "无法新建文件",

@@ -20,7 +20,7 @@ func (FileFolder) TableName() string {
 }
 
 // CreateFileFolder 新建文件夹
-func CreateFileFolder(folderName string, parentId int, fileStoreId int) {
+func CreateFileFolder(folderName string, parentId int, fileStoreId int) FileFolder {
 	fileFolder := FileFolder{
 		FileFolderName: folderName,
 		ParentFolderId: parentId,
@@ -28,6 +28,7 @@ func CreateFileFolder(folderName string, parentId int, fileStoreId int) {
 		Time:           time.Now().Format("2006-01-02 15:04:05"),
 	}
 	mysql.DB.Create(&fileFolder)
+	return fileFolder
 }
 
 // GetFolderById 根据ID得到文件夹
@@ -105,4 +106,11 @@ func DeleteStoreAllFolder(fileStoreId int) {
 func UpdateFolderName(fId int, fName string) {
 	var fileFolder FileFolder
 	mysql.DB.Model(&fileFolder).Where("id = ?", fId).Update("file_folder_name", fName)
+}
+
+// FolderNameExists 判断父文件夹下改文件夹名是否存在
+func FolderNameExists(parentId int, folderName string) bool {
+	var folder FileFolder
+	mysql.DB.Find(&folder, "file_folder_name = ? and parent_folder_id = ?", folderName, parentId)
+	return folder.FileFolderName != ""
 }
