@@ -3,7 +3,6 @@ package model
 import (
 	"CloudDrive/mysql"
 	"CloudDrive/util"
-	"os"
 	"path"
 	"strconv"
 	"strings"
@@ -138,9 +137,7 @@ func DownloadNumAdd(fId int) {
 
 // DeleteFileById 根据ID删除文件
 func DeleteFileById(fId int) {
-	file := GetFileById(fId)
 	mysql.DB.Where("id = ?", fId).Delete(MyFile{})
-	_ = os.Remove("./file" + strconv.Itoa(fId) + file.Suffix)
 }
 
 // DeleteStoreAllFile 删除一个仓库的所有文件

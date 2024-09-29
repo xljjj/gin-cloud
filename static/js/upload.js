@@ -24,7 +24,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (data.error){
                     statusDiv.textContent='文件上传失败，原因：'+data.error;
                 }else{
-                    statusDiv.textContent = '文件上传成功';
+                    alert("文件上传成功！")
+                    window.location.href=`/cloud/file?fId=${encodeURIComponent(fid)}`
                 }
             })
             .catch(error => {

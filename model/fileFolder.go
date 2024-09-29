@@ -84,12 +84,11 @@ func DeleteFileFolder(fId int) {
 	var files []MyFile
 	//删除文件夹信息
 	mysql.DB.Where("id = ?", fId).Delete(FileFolder{})
-	//删除文件夹中文件信息及储存
+	//删除文件夹中文件信息
 	mysql.DB.Find(&files, "parent_folder_id = ?", fId)
 	for _, file := range files {
 		DeleteFileById(file.Id)
 	}
-	mysql.DB.Where("parent_folder_id = ?", fId).Delete(MyFile{})
 	//递归删除文件夹子文件夹信息
 	mysql.DB.Find(&fileFolders, "parent_folder_id = ?", fId)
 	for _, fileFolder := range fileFolders {

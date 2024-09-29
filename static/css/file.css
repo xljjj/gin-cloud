@@ -79,6 +79,11 @@ h2{
     color:white;
 }
 
+.back-btn{
+    background-color: coral;
+    color:white;
+}
+
 .btn:hover {
     opacity: 0.8;
 }

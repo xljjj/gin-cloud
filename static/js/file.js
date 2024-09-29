@@ -134,3 +134,31 @@ function updateFolder(parentId,folderId){
             statusDiv.textContent = '因网络原因文件夹更名失败';
         });
 }
+
+// 删除文件夹
+function deleteFolder(folderId) {
+    const curURL=window.location.href
+    const statusDiv = document.getElementById('status');
+    if (confirm('确定删除此文件夹？')) {
+        fetch(`/cloud/deleteFolder?fId=${encodeURIComponent(folderId)}`, {
+            method: 'DELETE',
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error){
+                    statusDiv.textContent='文件删除失败，原因：'+data.error;
+                }else{
+                    alert("文件夹删除成功！")
+                    window.location.href = curURL;
+                }
+            })
+            .catch(error => {
+                statusDiv.textContent = '因网络原因文件夹删除失败';
+            });
+    }
+}
+
+// 浏览器回退
+function goBack() {
+    window.history.back();
+}

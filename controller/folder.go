@@ -87,7 +87,7 @@ func UpdateFolder(c *gin.Context) {
 
 // DeleteFolder 删除文件夹
 func DeleteFolder(c *gin.Context) {
-	folderIdStr := c.Query("folderId")
+	folderIdStr := c.Query("fId")
 	if folderIdStr == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "文件夹请求不存在"})
 		return
@@ -96,6 +96,15 @@ func DeleteFolder(c *gin.Context) {
 	folder := model.GetFolderById(folderId)
 	if folder.FileFolderName == "" {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "文件夹不存在"})
+		return
+	}
+	//删除文件夹路径下所有内容
+	folderPath := "./file" + model.GetFolderPath(folder)
+	err := os.RemoveAll(folderPath)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "删除文件夹失败",
+		})
 		return
 	}
 	model.DeleteFileFolder(folderId)
