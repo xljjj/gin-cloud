@@ -3,12 +3,14 @@ package controller
 import (
 	"CloudDrive/model"
 	"CloudDrive/redis"
+	"CloudDrive/util"
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 	"os"
+	"path"
 	"strconv"
 	"time"
 )
@@ -97,7 +99,19 @@ func HandleUpload(c *gin.Context) {
 		})
 		return
 	}
-	myFile := model.CreateFile(fileName, "", KBSize, fId, user.FileStoreId)
+	//生成哈希值
+	fileHash := util.SHA256HashCode(newFile)
+	Suffix := path.Ext(filePath)
+	//上传阿里云
+	err = util.UploadOss(filePath, fileHash, Suffix)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "无法将文件上传云",
+		})
+		return
+	}
+
+	myFile := model.CreateFile(fileName, fileHash, KBSize, fId, user.FileStoreId)
 
 	// 上传成功后增加现有容量
 	model.AddStoreSize(KBSize, user.FileStoreId)

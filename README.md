@@ -4,7 +4,8 @@
 <https://github.com/xiaogao67/gin-cloud-storage><br>
 前端模板引擎：Thymeleaf -> GO html/template（自带）<br>
 <font color=Red>**声明：本项目仅用作学习用途！<br>
-Disclaim: This project is only for learning purposes!**</font>
+Disclaim: This project is only for learning purposes!**</font><br>
+注：已测试阿里云OSS存储，参数已隐藏
 # 知识汇总
 - [GIN](#gin)
 - [数据库类型](#数据库类型)

@@ -65,7 +65,7 @@ func DownloadShareFile(c *gin.Context) {
 	}
 
 	//从oss获取文件
-	fileData := util.DownloadOss(fileInfo.FileHash, fileInfo.Suffix)
+	fileData, _ := util.DownloadOss(fileInfo.FileHash, fileInfo.Suffix)
 	//下载次数+1
 	model.DownloadNumAdd(fileId)
 

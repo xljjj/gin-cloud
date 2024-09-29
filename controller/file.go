@@ -3,6 +3,7 @@ package controller
 import (
 	"CloudDrive/model"
 	"CloudDrive/redis"
+	"CloudDrive/util"
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -93,6 +94,14 @@ func DeleteFile(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": "删除文件失败",
+		})
+		return
+	}
+	// 删除云存储
+	err = util.DeleteOss(file.FileHash, file.Suffix)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "删除云文件失败",
 		})
 		return
 	}
